@@ -10,8 +10,7 @@
 <h4 align="center">
 A game using <a href="https://phaser.io/" target="_blank" >Phaser 3</a> with <a href="https://www.typescriptlang.org/index.html" target="_blank" >TypeScript</a> and <a href="https://webpack.js.org/" target="_blank" >webpack</a>.
 Massive Multiplayer Survival Game based on hexagon tile grid.</h4>
-<br>
-<img src="readme/procedural_gen_world_cutted.gif" alt="header" width="600">
+
 
 ---
 
@@ -25,11 +24,8 @@ Massive Multiplayer Survival Game based on hexagon tile grid.</h4>
 
 ## Preview
 
-This is what you get after installing this template. A simple and clean starter template written in TypeScript. [Try it!](https://s3.eu-central-1.amazonaws.com/phaser3-typescript/starter-template/index.html)
+<img src="readme/procedural_gen_world_cutted.gif" alt="header" width="600">
 
-<a href="https://s3.eu-central-1.amazonaws.com/phaser3-typescript/starter-template/index.html">
-<img src="readme/screenshot.png" width="640" style='border: 0.25em solid #e1e4e8;border-radius: 20px;'/>
-</a>
 
 ## How To Use
 
