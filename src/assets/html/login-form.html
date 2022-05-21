@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            .nickname-form {
+                padding: 15px;
+                /* background-color: #931C22; */
+            }
+            .nickname-form input {
+                border-radius:20px;
+                padding: 10px;
+                font-size: 20px;
+                width: 400px;
+            }
+            .chat-button {
+                margin-left: 10px;
+                background:linear-gradient(to bottom, #eae0c2 5%, #ccc2a6 100%);
+                background-color:#eae0c2;
+                border-radius:20px;
+                display:inline-block;
+                cursor:pointer;
+                color:#505739;
+                font-family:Arial;
+                font-size:14px;
+                font-weight:bold;
+                padding:15px 20px;
+                text-decoration:none;
+            }
+            .chat-button:hover {
+                background:linear-gradient(to bottom, #ccc2a6 5%, #eae0c2 100%);
+                background-color:#ccc2a6;
+            }
+            .chat-button:active {
+                position:relative;
+                top:1px;
+            }
+
+        </style>
+    </head>
+    <body>
+        <div class="nickname-form">
+            <input type="text" name="nickname-input" placeholder="Nickname" />
+            <a name="chat-button" class="chat-button">Chat!</a>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            .chat-display {
+                width: 260px;
+                height: 290px;
+                background-color: #ffffff;
+                border: 1px solid black;
+                font-family: 'Open Sans', sans-serif;
+                font-weight: 500;
+                opacity: 0.5;
+                overflow-y: auto;
+                overflow-x: hidden;
+                overflow-wrap: break-word;
+                padding: 5px;
+            }
+
+            .chat-display > div {
+                margin-top: 5px;
+            }
+
+            .chat-display > div > span {
+                color: blue;
+                font-weight: bold;
+            }
+
+            .chat-display > div > span.self {
+                color: green;
+            }
+        </style>
+    </head>
+    <body>
+        <section id="chat-display" class='chat-display' name='chat-display'>
+        </section>
+    </body>
+</html>
