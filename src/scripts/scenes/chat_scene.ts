@@ -4,7 +4,7 @@ import ChatService from "../chat/chat_service";
 
 export default class ChatScene extends Phaser.Scene implements ChatListener {
     static readonly SCENE_KEY = 'CHAT_SCENE';
-    
+
     private static readonly CHAT_FORM_ASSET_KEY = 'CHAT_FORM_ASSET_KEY';
     private static readonly CHAT_DISPLAY_ASSET_KEY = 'CHAT_DISPLAY_ASSET_KEY';
     private static readonly PHASER_3_LOGO_ASSET_KEY = 'CHAT_FORM_ASSET_KEY';
@@ -34,13 +34,14 @@ export default class ChatScene extends Phaser.Scene implements ChatListener {
     create() {
         this.createAndAnimateLog();
         this.createChatElements();
-        
+
         this.addChatActivationListener();
     }
 
     onMessage(message: ChatMessageEvent): void {
         const newChatEntry = document.createElement("div");
-        newChatEntry.innerHTML = `<span ${message.username === this.nickname ? 'class=\'self\'' : ''}>${message.username}:</span> ${message.message}`;
+        newChatEntry.style.cssText = "font-family: MondwestPixel";
+        newChatEntry.innerHTML = `<span  ${message.username === this.nickname ? 'class=\'self\'' : ''}>${message.username}:</span> ${message.message}`;
 
         let chatElement = this.chatTextArea.getChildByID('chat-display');
         chatElement!.appendChild(newChatEntry);

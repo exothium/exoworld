@@ -1,6 +1,7 @@
 import 'phaser'
 import ChatScene from './scenes/chat_scene'
 import MenuScene from './scenes/menu_scene'
+import SplashScene from './scenes/splash_scene'
 
 const DEFAULT_WIDTH = 1280
 const DEFAULT_HEIGHT = 720
@@ -18,7 +19,7 @@ const config = {
     width: DEFAULT_WIDTH,
     height: DEFAULT_HEIGHT
   },
-  scene: [MenuScene, ChatScene],
+  scene: [SplashScene,MenuScene, ChatScene],
   physics: {
     default: 'arcade',
     arcade: {

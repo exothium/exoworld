@@ -33,7 +33,28 @@
       body {
         height: 100%;
         margin: 0;
+        font-family: MondwestPixel, serif;
         background-color: #000000;
+      }
+
+      @font-face {
+        font-family: Montreal;
+        src: url('/assets/fonts/PPNeueMontreal-Book.otf') format("opentype");
+      }
+
+      @font-face {
+        font-family: Montreal_bold;
+        src: url('/assets/fonts/PPNeueMontreal-Bold.otf') format("opentype");
+      }
+
+      @font-face {
+        font-family: MondwestPixel;
+        src: url('/assets/fonts/PPMondwest-Regular.otf') format("opentype");
+      }
+
+      @font-face {
+        font-family: NeueBit;
+        src: url('/assets/fonts/PPNeueBit-Bold.otf') format("opentype");
       }
     </style>
 
@@ -48,6 +69,10 @@
         })
       }
     </script> -->
+    <div style="font-family: Montreal; position: absolute; left: -1000px; visibility: hidden">.</div>
+    <div style="font-family: Montreal_bold; position: absolute; left: -1000px; visibility: hidden">.</div>
+    <div style="font-family: MondwestPixel; position: absolute; left: -1000px; visibility: hidden">.</div>
+    <div style="font-family: NeueBit; position: absolute; left: -1000px; visibility: hidden">.</div>
   </head>
   <body>
     <div id="phaser-game"></div>

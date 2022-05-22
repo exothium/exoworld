@@ -22,6 +22,32 @@ Massive Multiplayer Survival Game based on hexagon tile grid.</h4>
 - [ ] A* Pathfinding  
 - [ ] Player stats
 
+Core Structure tasks
+- [x] SplashScreen
+	- [ ] load all assets
+	- [x] load all cursors
+		- [x] default
+		- [x] interaction
+	- [x] set main cursor
+	- [x] load all fonts
+	- [x] load music
+- [ ] .env variable 
+- [ ] scalemanager
+
+
+## Scene Reference
+### SplashScene
+Splashscreen that loads all assets that we need throughout the game
+
+- [ ] define assets
+- [ ] load theme all
+- [ ] Refactor - Separate functions to load each asset type: 
+	- [ ] audio
+	- [ ] cursors
+	- [ ] sprites
+	- [ ] fonts
+	
+	
 ## Preview
 
 <img src="readme/procedural_gen_world_cutted.gif" alt="header" width="600">

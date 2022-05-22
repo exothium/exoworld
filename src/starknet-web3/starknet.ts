@@ -22,4 +22,4 @@ const connectStarknet = async () => {
     alert('hey');
 }
 
-connectStarknet();
+//connectStarknet();
