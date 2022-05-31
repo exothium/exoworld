@@ -1,6 +1,8 @@
 //import ChatScene from "./chat_scene";
 
 import MenuScene from "./menu_scene";
+import WorldScene from "./world_scene";
+import ChatScene from "./chat_scene";
 
 export default class SplashScene extends Phaser.Scene {
     static readonly SCENE_KEY = 'SPLASH_SCENE';
@@ -10,10 +12,12 @@ export default class SplashScene extends Phaser.Scene {
 
     constructor() {
         super(SplashScene.SCENE_KEY);
-        this.totalFadeinAndOut = 1000;
+        this.totalFadeinAndOut = 100;//3000
     }
 
     preload() {
+        this.load.image('apple', 'assets/sprites/apple.png');
+
         this.load.image(SplashScene.EXOWORLD_LOGO_ASSET_KEY, 'assets/img/exothium_spawned_exothium_world.png');
         var progress = this.add.graphics();
 
@@ -31,8 +35,121 @@ export default class SplashScene extends Phaser.Scene {
 
         });
 
-        this.load.setPath('assets/sprites/');
+        this.load.setPath('assets/sprites/terrain');
 
+        // terrain
+        this.load.image('hexset_grid_boreal_flat_01');
+        this.load.image('hexset_grid_boreal_flat_02');
+        this.load.image('hexset_grid_boreal_flat_03');
+        this.load.image('hexset_grid_boreal_hill_01');
+        this.load.image('hexset_grid_boreal_hill_02');
+        this.load.image('hexset_grid_boreal_hill_03');
+        this.load.image('hexset_grid_boreal_mont_01');
+        this.load.image('hexset_grid_boreal_mont_02');
+        this.load.image('hexset_grid_boreal_mont_03');
+        this.load.image('hexset_grid_boreal_O_flat_01');
+        this.load.image('hexset_grid_boreal_O_flat_02');
+        this.load.image('hexset_grid_boreal_O_flat_03');
+        this.load.image('hexset_grid_desert_flat_01');
+        this.load.image('hexset_grid_desert_flat_02');
+        this.load.image('hexset_grid_desert_flat_03');
+        this.load.image('hexset_grid_desert_hill_01');
+        this.load.image('hexset_grid_desert_hill_02');
+        this.load.image('hexset_grid_desert_hill_03');
+        this.load.image('hexset_grid_desert_mont_01');
+        this.load.image('hexset_grid_desert_mont_02');
+        this.load.image('hexset_grid_desert_mont_03');
+        this.load.image('hexset_grid_desert_O_flat_01');
+        this.load.image('hexset_grid_desert_O_flat_02');
+        this.load.image('hexset_grid_desert_O_flat_03');
+        this.load.image('hexset_grid_snow_flat_01');
+        this.load.image('hexset_grid_snow_flat_02');
+        this.load.image('hexset_grid_snow_flat_03');
+        this.load.image('hexset_grid_snow_hill_01');
+        this.load.image('hexset_grid_snow_hill_02');
+        this.load.image('hexset_grid_snow_hill_03');
+        this.load.image('hexset_grid_snow_mont_01');
+        this.load.image('hexset_grid_snow_mont_02');
+        this.load.image('hexset_grid_snow_mont_03');
+        this.load.image('hexset_grid_snow_O_flat_01');
+        this.load.image('hexset_grid_snow_O_flat_02');
+        this.load.image('hexset_grid_snow_O_flat_03');
+        this.load.image('hexset_grid_stone1_flat_01');
+        this.load.image('hexset_grid_stone1_flat_02');
+        this.load.image('hexset_grid_stone1_flat_03');
+        this.load.image('hexset_grid_stone1_hill_01');
+        this.load.image('hexset_grid_stone1_hill_02');
+        this.load.image('hexset_grid_stone1_hill_03');
+        this.load.image('hexset_grid_stone1_mont_01');
+        this.load.image('hexset_grid_stone1_mont_02');
+        this.load.image('hexset_grid_stone1_mont_03');
+        this.load.image('hexset_grid_stone1_O_flat_01');
+        this.load.image('hexset_grid_stone1_O_flat_02');
+        this.load.image('hexset_grid_stone1_O_flat_03');
+        this.load.image('hexset_grid_swamp_flat_01');
+        this.load.image('hexset_grid_swamp_flat_02');
+        this.load.image('hexset_grid_swamp_flat_03');
+        this.load.image('hexset_grid_swamp_hill_01');
+        this.load.image('hexset_grid_swamp_hill_02');
+        this.load.image('hexset_grid_swamp_hill_03');
+        this.load.image('hexset_grid_swamp_mont_01');
+        this.load.image('hexset_grid_swamp_mont_02');
+        this.load.image('hexset_grid_swamp_mont_03');
+        this.load.image('hexset_grid_swamp_O_flat_01');
+        this.load.image('hexset_grid_swamp_O_flat_02');
+        this.load.image('hexset_grid_swamp_O_flat_03');
+        this.load.image('hexset_grid_temperate_flat_01');
+        this.load.image('hexset_grid_temperate_flat_02');
+        this.load.image('hexset_grid_temperate_flat_03');
+        this.load.image('hexset_grid_temperate_hill_01');
+        this.load.image('hexset_grid_temperate_hill_02');
+        this.load.image('hexset_grid_temperate_hill_03');
+        this.load.image('hexset_grid_temperate_mont_01');
+        this.load.image('hexset_grid_temperate_mont_02');
+        this.load.image('hexset_grid_temperate_mont_03');
+        this.load.image('hexset_grid_temperate_O_flat_01');
+        this.load.image('hexset_grid_temperate_O_flat_02');
+        this.load.image('hexset_grid_temperate_O_flat_03');
+        this.load.image('hexset_grid_warm_flat_01');
+        this.load.image('hexset_grid_warm_flat_02');
+        this.load.image('hexset_grid_warm_flat_03');
+        this.load.image('hexset_grid_warm_hill_01');
+        this.load.image('hexset_grid_warm_hill_02');
+        this.load.image('hexset_grid_warm_hill_03');
+        this.load.image('hexset_grid_warm_mont_01');
+        this.load.image('hexset_grid_warm_mont_02');
+        this.load.image('hexset_grid_warm_mont_03');
+        this.load.image('hexset_grid_warm_O_flat_01');
+        this.load.image('hexset_grid_warm_O_flat_02');
+        this.load.image('hexset_grid_warm_O_flat_03');
+        this.load.image('hexset_grid_wdeep_flat_01');
+        this.load.image('hexset_grid_wdeep_flat_02');
+        this.load.image('hexset_grid_wdeep_flat_03');
+        this.load.image('hexset_grid_wdeep_hill_01');
+        this.load.image('hexset_grid_wdeep_hill_02');
+        this.load.image('hexset_grid_wdeep_hill_03');
+        this.load.image('hexset_grid_wdeep_mont_01');
+        this.load.image('hexset_grid_wdeep_mont_02');
+        this.load.image('hexset_grid_wdeep_mont_03');
+        this.load.image('hexset_grid_wdeep_O_flat_01');
+        this.load.image('hexset_grid_wdeep_O_flat_02');
+        this.load.image('hexset_grid_wdeep_O_flat_03');
+        this.load.image('hexset_grid_wshallow_flat_01');
+        this.load.image('hexset_grid_wshallow_flat_02');
+        this.load.image('hexset_grid_wshallow_flat_03');
+        this.load.image('hexset_grid_wshallow_hill_01');
+        this.load.image('hexset_grid_wshallow_hill_02');
+        this.load.image('hexset_grid_wshallow_hill_03');
+        this.load.image('hexset_grid_wshallow_mont_01');
+        this.load.image('hexset_grid_wshallow_mont_02');
+        this.load.image('hexset_grid_wshallow_mont_03');
+        this.load.image('hexset_grid_wshallow_O_flat_01');
+        this.load.image('hexset_grid_wshallow_O_flat_02');
+        this.load.image('hexset_grid_wshallow_O_flat_03');
+        //\\ terrain
+
+        this.load.setPath('assets/sprites/');
+        this.load.image('128x128');
         this.load.image('128x128');
         this.load.image('128x128-v2');
         this.load.image('a');
@@ -264,7 +381,9 @@ export default class SplashScene extends Phaser.Scene {
         }, this);
 
         this.cameras.main.once('camerafadeoutcomplete', function (camera) {
-            ctx.scene.start(MenuScene.SCENE_KEY, { bundle:{empyt:'empty'} })
+            //ctx.scene.start(MenuScene.SCENE_KEY, { bundle:{empyt:'empty'} })
+            ctx.scene.start(ChatScene.SCENE_KEY, { nickname:"hugo" });
+
 
         }, this);
         this.cameras.main.fadeIn(ctx.totalFadeinAndOut);

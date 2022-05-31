@@ -10,7 +10,7 @@ export default class ChatService {
         // TODO add support for environment variables
         //const serverHost: string = process.env.CHAT_HOST || 'http://localhost';
         //const serverHost = 'http://localhost:3000';
-        const serverHost = 'http://192.168.1.65:3000';
+        const serverHost = 'http://192.168.1.52:3000';
         this.socket = io(serverHost);
         this.listenToNewMessages();
     }
