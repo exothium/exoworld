@@ -8,17 +8,18 @@ const DEFAULT_WIDTH = 1280
 const DEFAULT_HEIGHT = 800
 
 const config = {
-  type: Phaser.WEBGL,
-  dom: {
-      createContainer: true
-  },
+  type: Phaser.AUTO,
+  // dom: {
+  //     createContainer: true
+  // },
   backgroundColor: '#484848',
   scale: {
     parent: 'phaser-game',
-    mode: Phaser.Scale.FIT,
-    autoCenter: Phaser.Scale.CENTER_BOTH,
-    width: DEFAULT_WIDTH,
-    height: DEFAULT_HEIGHT
+    // mode: Phaser.Scale.FIT,
+    // autoCenter: Phaser.Scale.CENTER_BOTH,
+    // width: DEFAULT_WIDTH,
+    // height: DEFAULT_HEIGHT,
+    batchSize: 5000,
   },
   // render: {
   //   //  A custom batch size of 1024 quads

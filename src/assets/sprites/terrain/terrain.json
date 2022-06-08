@@ -1,0 +1,77 @@
+{"frames": [
+
+  {
+    "filename": "rocks",
+    "frame": {"x":0,"y":0,"w":33,"h":41},
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": {"x":0,"y":0,"w":33,"h":41},
+    "sourceSize": {"w":33,"h":41},
+    "pivot": {"x":0.5,"y":0.5}
+  },
+  {
+    "filename": "snow",
+    "frame": {"x":33,"y":0,"w":33,"h":41},
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": {"x":33,"y":0,"w":33,"h":41},
+    "sourceSize": {"w":33,"h":41},
+    "pivot": {"x":0.5,"y":0.5}
+  },
+  {
+    "filename": "forest",
+    "frame": {"x":66,"y":0,"w":33,"h":41},
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": {"x":66,"y":0,"w":33,"h":41},
+    "sourceSize": {"w":33,"h":41},
+    "pivot": {"x":0.5,"y":0.5}
+  },
+  {
+    "filename": "grass",
+    "frame": {"x":99,"y":0,"w":33,"h":41},
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": {"x":99,"y":0,"w":33,"h":41},
+    "sourceSize": {"w":33,"h":41},
+    "pivot": {"x":0.5,"y":0.5}
+  },
+  {
+    "filename": "sand",
+    "frame": {"x":132,"y":0,"w":33,"h":41},
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": {"x":132,"y":0,"w":33,"h":41},
+    "sourceSize": {"w":33,"h":41},
+    "pivot": {"x":0.5,"y":0.5}
+  },
+  {
+    "filename": "light_water",
+    "frame": {"x":165,"y":0,"w":33,"h":41},
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": {"x":165,"y":0,"w":33,"h":41},
+    "sourceSize": {"w":33,"h":41},
+    "pivot": {"x":0.5,"y":0.5}
+  },
+  {
+    "filename": "dark_water",
+    "frame": {"x":198,"y":0,"w":33,"h":41},
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": {"x":198,"y":0,"w":33,"h":41},
+    "sourceSize": {"w":33,"h":41},
+    "pivot": {"x":0.5,"y":0.5}
+  }
+
+  ],
+  "meta": {
+    "app": "http://www.codeandweb.com/texturepacker",
+    "version": "1.0",
+    "image": "megaset-0.png",
+    "format": "RGBA8888",
+    "size": {"w":1024,"h":1024},
+    "scale": "1",
+    "smartupdate": "$TexturePacker:SmartUpdate:5e8f90752cfd57d3adfb39bcd3eef1b6:87d98cec6fa616080f731b87726d6a1e:b55588eba103b49b35a0a59665ed84fd$"
+  }
+}

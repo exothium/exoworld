@@ -38,6 +38,7 @@ export default class SplashScene extends Phaser.Scene {
         this.load.setPath('assets/sprites/terrain');
 
         // terrain
+        this.load.atlas('atlas', 'terrain_atlas.png', 'terrain.json');
         this.load.image('hexset_grid_boreal_flat_01');
         this.load.image('hexset_grid_boreal_flat_02');
         this.load.image('hexset_grid_boreal_flat_03');
