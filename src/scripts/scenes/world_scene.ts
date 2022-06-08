@@ -14,129 +14,112 @@ export default class WorldScene extends Phaser.Scene {
     private canvasWidth = 1280;
     private canvasHeight = 800;
     private group;
-    private worldCenterX = 1280/2;
+    private worldCenterX = 1280 / 2;
     private worldCenterY = 400;
-    private hexRadius = 17;
+    private hexRadius = 32;
+    private rings = 25;
     private innerCircleRadius = (this.hexRadius / 2) * Math.sqrt(3);
     private TO_RADIANS = Math.PI / 180;
+    private mapTexture;
+    private terrainHeights = {
+        deepWater: {
+            height: 0.1
+        },
+        shallowWater: {
+            height: 0.2
+        },
+        beach: { //treated as desert
+            height: 0.25
+        },
+        land: {
+            height: 0.9
+        },
+        mountain: {
+            height: 1
+        }
+    };
     private opts = {
-        noise_mod: 1,
-        noise_scale: (0.05*(this.hexRadius/3)), //0.05
-        island_size: (0.5*(this.hexRadius/3)), //0.5
-        //Initial Colors
-        // dark_water: [120, 120, 225], // RGB array
-        // light_water: [150, 150, 255],
-        // sand: [237, 201, 175],
-        // grass: [207, 241, 135],
-        // forest: [167, 201, 135],
-        // rocks: [170, 170, 170],
-        // snow: [255, 255, 255],
-        dark_water: "hexset_grid_wdeep_flat_01", // RGB array
-        light_water: "hexset_grid_wshallow_flat_01",
-        sand: "hexset_grid_desert_flat_01",
-        grass: "hexset_grid_boreal_flat_01",
-        forest: "hexset_grid_temperate_O_flat_01",
-        rocks: "hexset_grid_stone1_flat_01",
-        snow_high: "hexset_grid_snow_mont_01",
-        snow_medium: "hexset_grid_snow_hill_01",
-        snow_low: "hexset_grid_snow_flat_01",
+        island_size: this.rings / 17.5, //doesn't snap to edge of map :)
+        shape_noise_mod: this.rings * 0.04,
+        shape_noise_scale: 0.125, //0.05
+        tile_type_noise_mod: this.rings * 0.02,
+        tile_type_noise_scale: 0.25,
         // Initial Height Ranges
-        snow_height_high: 0.9,
-        snow_height_medium: 0.8,
-        snow_height_low: 0.7,
-        rocks_height: 0.6,
-        forest_height: 0.49,
-        grass_height: 0.36,
-        sand_height: 0.26,
-        light_water_height: 0.23,
-        dark_water_height: 0.13,
-
+        desert_height: 0.05,
+        plain_height: 0.5,
+        forest_height: 0.85,
+        snow_height: 0.9,
+        mountain_height: 1,
         randomize: () => this.setup(this)
     };
-    private getcolor(n) {
-        //n = map_range(n,-1,1,0,1);
-        let v = Math.abs(parseFloat(n) * 255); //Math.abs(n * 255.0);
-        //let v = 0.9*255;
-        //height map
-        let color;
-        if (v < this.opts.dark_water_height * 255) {
-            color = this.opts.dark_water;
-        } else if (v < this.opts.light_water_height * 255) {
-            color = this.opts.light_water;
-        } else if (v < this.opts.sand_height * 255) {
-            color = this.opts.sand;
-        } else if (v < this.opts.grass_height * 255) {
-            color = this.opts.grass;
-        } else if (v < this.opts.forest_height * 255) {
-            color = this.opts.forest;
-        } else if (v < this.opts.rocks_height * 255) {
-            color = this.opts.rocks;
-        }else if (v < this.opts.snow_height_low * 255) {
-            color = this.opts.snow_low;
-        }else if (v < this.opts.snow_height_medium * 255) {
-            color = this.opts.snow_medium;
-        } else {
-            color = this.opts.snow_high;
-        }
 
-        let rgbColor = Phaser.Display.Color.GetColor(color[0], color[1], color[2]);
-        return rgbColor;
-
-    }
     private getTerrain(n) {
         //n = map_range(n,-1,1,0,1);
         let v = Math.abs(parseFloat(n) * 255); //Math.abs(n * 255.0);
         //let v = 0.9*255;
         //height map
-        let assetKey;
-        if (v < this.opts.dark_water_height * 255) {
-            assetKey = this.opts.dark_water;
-        } else if (v < this.opts.light_water_height * 255) {
-            assetKey = this.opts.light_water;
-        } else if (v < this.opts.sand_height * 255) {
-            assetKey = this.opts.sand;
-        } else if (v < this.opts.grass_height * 255) {
-            assetKey = this.opts.grass;
+        let assetKey: string[] = [];
+        if (v < this.opts.desert_height * 255) {
+            assetKey.push('desert');
+        } else if (v < this.opts.plain_height * 255) {
+            assetKey.push('plain');
         } else if (v < this.opts.forest_height * 255) {
-            assetKey = this.opts.forest;
-        } else if (v < this.opts.rocks_height * 255) {
-            assetKey = this.opts.rocks;
-        } else if (v < this.opts.snow_height_low * 255) {
-            assetKey = this.opts.snow_low;
-        }else if (v < this.opts.snow_height_medium * 255) {
-            assetKey = this.opts.snow_medium;
-        } else {
-            assetKey = this.opts.snow_high;
+            assetKey.push('plain');
+            assetKey.push('forest');
+        } else if (v < this.opts.snow_height * 255) {
+            assetKey.push('snow');
+        }  else {
+            assetKey.push('mountain');
         }
 
-        let randomSubTerrain = Math.ceil(Math.random()*3);
-        assetKey = assetKey.replace("01","0"+randomSubTerrain);
         return assetKey;
-
     }
+
+    private getTerrainHeight(n) {
+        //n = map_range(n,-1,1,0,1);
+        let v = Math.abs(parseFloat(n) * 255); //Math.abs(n * 255.0);
+        //let v = 0.9*255;
+        //height map
+        let assetKey: string = '';
+        if (v < this.terrainHeights.deepWater.height * 255) {
+            assetKey = 'dark_water';
+        } else if (v < this.terrainHeights.shallowWater.height * 255) {
+            assetKey = 'light_water';
+        } else if (v < this.terrainHeights.beach.height * 255) {
+            assetKey = 'desert';
+        } else if (v < this.terrainHeights.land.height * 255) {
+            assetKey = 'land';
+        } else {
+            assetKey = 'mountain';
+        }
+
+        return assetKey;
+    }
+
     private map_function(value, in_min, in_max, out_min, out_max) {
         return ((value - in_min) * (out_max - out_min)) / (in_max - in_min) + out_min;
     };
-    private drawHex(x, y, decay) {
+
+    private getNoise(x, y, type) {
         let r = this.hexRadius;
-        this.graphics.beginPath();
-        this.graphics.moveTo(x, y - r);
-        //let value2d = simplex.noise2D(x,y-r);
-
-        //simplex.noise2D
-        //noise
-
         let matrixXvalue = Math.ceil(x / (this.hexRadius * 2));
         let matrixYvalue = Math.ceil((y - r) / (this.hexRadius * 2));
         let matrixWidth = Math.ceil((this.canvasWidth) / (this.hexRadius * 2));
         let matrixHeight = Math.ceil(this.canvasHeight / (this.hexRadius * 2));
 
-
+        let scale: number = 0;
+        let noiseMod: number = 0;
+        if (type === 'height') {
+            scale = this.opts.shape_noise_scale;
+            noiseMod = this.opts.shape_noise_mod;
+        } else if (type === 'terrainType') {
+            scale = this.opts.tile_type_noise_scale;
+            noiseMod = this.opts.tile_type_noise_mod;
+        }
         let simplexNoiseValue = this.simplex.noise2D(
-            Number((matrixXvalue / this.opts.noise_mod) * this.opts.noise_scale),
-            Number((matrixYvalue / this.opts.noise_mod) * this.opts.noise_scale)
+            Number((matrixXvalue / noiseMod) * scale),
+            Number((matrixYvalue / noiseMod) * scale)
         );
-        //let value2d = parseFloat(simplexNoiseValue);
 
         let value2d = this.map_function(simplexNoiseValue, -1.0, 1.0, 0.0, 1.0);
 
@@ -153,90 +136,102 @@ export default class WorldScene extends Phaser.Scene {
         value2d -= Math.pow(grad, 3);
         value2d = Math.max(value2d, 0);
 
-        // let hexColorValue = this.getcolor(value2d);
-        //
-        // for (var i = 0; i <= 6; i++) {
-        //     this.graphics.lineTo(
-        //         x + Math.cos((i * 60 - 90) * this.TO_RADIANS) * r,
-        //         y + Math.sin((i * 60 - 90) * this.TO_RADIANS) * r
-        //     );
-        // }
-        //
-        // let thickness = 1;
-        // let color = 0x000000;
-        // let alpha = 1;
-        //
-        // this.graphics.lineStyle(thickness, color, alpha);
-        // this.graphics.fillStyle(hexColorValue,1);
-        // this.graphics.closePath();
-        // this.graphics.strokePath();
-        // this.graphics.fillPath();
-
-        let terrainKey = this.getTerrain(value2d);
-        let terrainTile = this.add.image(x, y - r, terrainKey).setInteractive();
-        terrainTile.setDepth(y);
-        terrainTile.setOrigin(0.5,0.583);
-        //this.group.add(terrainTile);
-        //this.container.add(terrainTile);
-
-        terrainTile.on('pointerover', function (event) {
-            terrainTile.setTint(0xff0000);
-        });
-
-        terrainTile.on('pointerout', function (event) {
-
-            terrainTile.clearTint();
-
-        });
-
-
+        return value2d;
     }
-    private drawHexCircle(x, y, circles) {
+
+    private drawHex(x, y, decay) {
+        let value2d = this.getNoise(x, y, 'height');
+
+        let terrainHeight = this.getTerrainHeight(value2d);
+
+        let terrainKeys;
+        if(terrainHeight === 'land') {
+            value2d = this.getNoise(x, y, 'terrainType');
+            terrainKeys = this.getTerrain(value2d);
+        } else {
+            terrainKeys = [terrainHeight];
+        }
+
+
+
+        for (let i = 0; i < terrainKeys.length; i++) {
+            var brush = this.add.image(x, y, terrainKeys[i]);
+            brush.setDisplaySize(Math.sqrt(3) * this.hexRadius, 2 * this.hexRadius);
+            this.mapTexture.batchDraw(brush, x, y);
+        }
+    }
+
+    private drawHexCircle(x, y) {
+        this.mapTexture = this.add.renderTexture(0, 0);
         let rc = this.innerCircleRadius;
+        this.mapTexture.beginDraw();
         this.drawHex(this.worldCenterX, this.worldCenterY, 1); //center
         let countHex = 0;
-        for (let i = 1; i <= circles; i++) {
+        for (let i = 1; i <= this.rings; i++) {
             for (let j = 0; j < 6; j++) {
                 let currentX = x + Math.cos(j * 60 * this.TO_RADIANS) * rc * 2 * i;
                 let currentY = y + Math.sin(j * 60 * this.TO_RADIANS) * rc * 2 * i;
-                this.drawHex(currentX, currentY, 1 - (i - 5) / circles);
+                this.drawHex(currentX, currentY, 1 - (i - 5) / this.rings);
                 countHex++;
                 for (let k = 1; k < i; k++) {
                     let newX =
                         currentX + Math.cos((j * 60 + 120) * this.TO_RADIANS) * rc * 2 * k;
                     let newY =
                         currentY + Math.sin((j * 60 + 120) * this.TO_RADIANS) * rc * 2 * k;
-                    this.drawHex(newX, newY, 1 - (i - 5) / circles);
+                    this.drawHex(newX, newY, 1 - (i - 5) / this.rings);
                     countHex++;
                 }
             }
         }
+        this.mapTexture.endDraw();
         console.log("rendered " + countHex + " hexs");
     }
+
+    private mapInteractiveScene() {
+        /*let text = this.add.text(0, 0, '').setStyle({
+            fontSize: '19px'
+        });*/
+
+        let circleMapArea = this.add.circle(this.worldCenterX, this.worldCenterY, ((this.hexRadius * this.rings) * Math.sqrt(3) + (this.hexRadius / 2 * Math.sqrt(3))), 0x6666ff0).setAlpha(0.5).setInteractive();
+
+        circleMapArea.on('pointermove', (pointer, localX, localY) => {
+            let selectedHex = {
+                q: 0,
+                r: 0,
+            };
+            let circleMapX = pointer.x;
+            let spaceX = Math.round(localX - (circleMapArea.width/2));
+            let spaceY = Math.round(localY - (circleMapArea.height/2));
+            selectedHex.q = Math.round((Math.sqrt(3) / 3 * spaceX - spaceY / 3) / this.hexRadius);
+            selectedHex.r = Math.round((spaceY * 2 / 3) / this.hexRadius);
+
+            //text.setText('Q: ' + selectedHex.q + ', R: ' + selectedHex.r);
+            console.log('Q: ' + selectedHex.q + ', R: ' + selectedHex.r);
+        });
+    }
+
     private setup(ctx) {
         //this.graphics.clear();
         ctx.simplex = new SimplexNoise("exothium"); //+ Date.now()
-        ctx.drawHexCircle(this.worldCenterX, this.worldCenterY, 30);
+        ctx.drawHexCircle(this.worldCenterX, this.worldCenterY, 50);
+        ctx.mapInteractiveScene();
 
-        this.input.on("wheel",  (pointer, gameObjects, deltaX, deltaY, deltaZ) => {
+
+        this.input.on("wheel", (pointer, gameObjects, deltaX, deltaY, deltaZ) => {
 
             if (deltaY > 0) {
-                var newZoom = this.cameras.main.zoom -.1;
+                var newZoom = this.cameras.main.zoom * 0.9;
                 if (newZoom > 0.0) {
                     this.cameras.main.zoom = newZoom;
                 }
             }
 
             if (deltaY < 0) {
-                var newZoom = this.cameras.main.zoom +.1;
-                if (newZoom < 50.3) {
+                var newZoom = this.cameras.main.zoom * 1.1;
+                if (newZoom < 10000000) {
                     this.cameras.main.zoom = newZoom;
                 }
             }
-
-            // this.camera.centerOn(pointer.worldX, pointer.worldY);
-            // this.camera.pan(pointer.worldX, pointer.worldY, 2000, "Power2");
-
         });
 
         this.input.on('pointermove', (pointer) => {
@@ -246,13 +241,13 @@ export default class WorldScene extends Phaser.Scene {
             this.cameras.main.scrollY -= (pointer.y - pointer.prevPosition.y) / this.cameras.main.zoom;
         });
     }
+
     constructor() {
         super(WorldScene.SCENE_KEY);
         this.ctx = this;
     }
 
     preload() {
-
         this.graphics = this.add.graphics();
     }
 
@@ -264,9 +259,11 @@ export default class WorldScene extends Phaser.Scene {
         var general = gui.addFolder("Generation Details");
         general.open();
 
-        general.add(this.opts, "island_size", 0.01, 3).onChange(() => this.setup(this));
-        general.add(this.opts, "noise_scale", 0.01, 0.14).onChange(() => this.setup(this));
-        general.add(this.opts, "noise_mod", 1, 3).onChange(() => this.setup(this));
+        general.add(this.opts, "island_size", 0, this.opts.island_size * 2).onChange(() => this.setup(this));
+        general.add(this.opts, "shape_noise_mod", 0, this.opts.shape_noise_mod * 2).onChange(() => this.setup(this));
+        general.add(this.opts, "shape_noise_scale", 0, this.opts.shape_noise_scale * 2).onChange(() => this.setup(this));
+        general.add(this.opts, "tile_type_noise_mod", 0, this.opts.tile_type_noise_mod * 2).onChange(() => this.setup(this));
+        general.add(this.opts, "tile_type_noise_scale", 0, this.opts.tile_type_noise_scale * 2).onChange(() => this.setup(this));
 
         gui.add(this.opts, "randomize").name("Randomize");
         // //this.container = this.add.container(0, 0);
@@ -275,13 +272,9 @@ export default class WorldScene extends Phaser.Scene {
         //     key: 'bobs'
         // });
 
-         this.setup(this.ctx);
+        this.setup(this.ctx);
 
     }
-
-
-
-
 
 
 }

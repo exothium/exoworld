@@ -35,6 +35,17 @@ export default class SplashScene extends Phaser.Scene {
 
         });
 
+
+        //new terrain
+        this.load.image('dark_water', 'assets/sprites/newTerrain/OpenCiv/tile_ocean.png'); //water
+        this.load.image('light_water', 'assets/sprites/newTerrain/OpenCiv/tile_shallow_ocean.png'); //water
+        this.load.image('desert', 'assets/sprites/newTerrain/OpenCiv/tile_desert.png'); //desert
+        this.load.image('plain', 'assets/sprites/newTerrain/OpenCiv/tile_grass.png'); //plain
+        this.load.image('forest', 'assets/sprites/newTerrain/OpenCiv/tile_jungle.png'); //forest
+        this.load.image('mountain', 'assets/sprites/newTerrain/OpenCiv/tile_mountain.png'); //mountain
+        this.load.image('snow', 'assets/sprites/newTerrain/OpenCiv/tile_select.png'); //snow
+        this.load.image('land', 'assets/sprites/newTerrain/OpenCiv/tile_tundra.png');
+
         this.load.setPath('assets/sprites/terrain');
 
         // terrain
