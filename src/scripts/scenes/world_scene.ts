@@ -309,7 +309,7 @@ export default class WorldScene extends Phaser.Scene {
 
     private mapInteractiveScene() {
 
-        let text = this.add.text(this.worldCenterX, this.worldCenterY, 'asdfasdfasdf').setStyle({
+        let text = this.add.text(this.worldCenterX, this.worldCenterY, '').setStyle({
             fontSize: '19px'
         });
 
