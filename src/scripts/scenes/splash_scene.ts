@@ -12,7 +12,7 @@ export default class SplashScene extends Phaser.Scene {
 
     constructor() {
         super(SplashScene.SCENE_KEY);
-        this.totalFadeinAndOut = 100;//3000
+        this.totalFadeinAndOut = 1000;//3000
     }
 
     preload() {
@@ -37,13 +37,16 @@ export default class SplashScene extends Phaser.Scene {
 
 
         //new terrain
+        this.load.atlas('atlas_tiles', 'assets/sprites/newTerrain/OpenCiv/AtlasTiles/texture.png', 'assets/sprites/newTerrain/OpenCiv/AtlasTiles/texture.json');
+        this.load.atlas('atlas_clouds', 'assets/sprites/newTerrain/OpenCiv/AtlasClouds/texture.png', 'assets/sprites/newTerrain/OpenCiv/AtlasClouds/texture.json');
+        //create atlas with json easily with https://free-tex-packer.com/app/
         this.load.image('dark_water', 'assets/sprites/newTerrain/OpenCiv/tile_ocean.png'); //water
         this.load.image('light_water', 'assets/sprites/newTerrain/OpenCiv/tile_shallow_ocean.png'); //water
         this.load.image('desert', 'assets/sprites/newTerrain/OpenCiv/tile_desert.png'); //desert
         this.load.image('plain', 'assets/sprites/newTerrain/OpenCiv/tile_grass.png'); //plain
         this.load.image('forest', 'assets/sprites/newTerrain/OpenCiv/tile_jungle.png'); //forest
         this.load.image('mountain', 'assets/sprites/newTerrain/OpenCiv/tile_mountain.png'); //mountain
-        this.load.image('snow', 'assets/sprites/newTerrain/OpenCiv/tile_select.png'); //snow
+        this.load.image('snow', 'assets/sprites/newTerrain/OpenCiv/tile_snow.png'); //snow
         this.load.image('land', 'assets/sprites/newTerrain/OpenCiv/tile_tundra.png');
 
         this.load.setPath('assets/sprites/terrain');

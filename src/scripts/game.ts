@@ -14,6 +14,7 @@ const config = {
   dom: {
       createContainer: true
   },
+  pixelArt: true,
   scale: {
     // Fit to window
     mode: Phaser.Scale.FIT,
