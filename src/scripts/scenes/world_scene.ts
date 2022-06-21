@@ -308,7 +308,8 @@ export default class WorldScene extends Phaser.Scene {
     }
 
     private mapInteractiveScene() {
-        let text = this.add.text(this.worldCenterX, this.worldCenterY, '').setStyle({
+
+        let text = this.add.text(this.worldCenterX, this.worldCenterY, 'asdfasdfasdf').setStyle({
             fontSize: '19px'
         });
 
@@ -358,10 +359,6 @@ export default class WorldScene extends Phaser.Scene {
 
         this.generationDetails.add(this.opts, "randomize").name("Randomize");
 
-        let radius = ((this.hexRadius * this.opts.rings) * Math.sqrt(3) + (this.hexRadius / 2 * Math.sqrt(3)));
-
-        //this.cameras.main.setBounds(this.worldCenterX - radius, this.worldCenterY - radius, radius * 2 , radius * 2, true).setZoom(1);
-
         this.input.on("wheel", (pointer, gameObjects, deltaX, deltaY, deltaZ) => {
             if (deltaY > 0) {
                 var newZoom = this.cameras.main.zoom - 0.1;
@@ -394,8 +391,8 @@ export default class WorldScene extends Phaser.Scene {
         while (this.timerAux > 1) {
             this.opts.day += 1;
             this.timerAux = 0;
-            this.setup(this.ctx);
             this.generationDetails.updateDisplay();
+            this.drawCloudMap();
         }
 
 
