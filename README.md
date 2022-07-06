@@ -17,7 +17,7 @@ Massive Multiplayer Survival Game based on hexagon tile grid.</h4>
 ## Todo
 
 - [x] Chat  
-- [ ] Procedural World Generation (**Wip**)  
+- [ ] Procedural WorldInstance Generation (**Wip**)  
 - [ ] Adjacente Movement  
 - [ ] A* Pathfinding  
 - [ ] Player stats

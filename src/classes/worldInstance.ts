@@ -1,21 +1,14 @@
-type Tile = {
-    q: number;
-    r: number;
-    x: number;
-    y: number;
-}
+import {Tile, NoiseHeight, NoiseLand, QrStruct, Tiles, TerrainHeight, AssetSprite } from '../types/worldTypes';
+import SimplexNoise from 'simplex-noise';
 
-type qrStruct = {
-    q: number;
-    r: number;
-}
-
-export class World {
+export class WorldInstance {
     private readonly _canvasWidth : number = 1280;
     private readonly _canvasHeight : number = 720;
     private readonly _canvasCenterX : number = this._canvasWidth / 2;
     private readonly _canvasCenterY : number = this._canvasHeight / 2;
     private readonly _hexRadius : number;
+    private _tiles : Tiles;
+    private _simplex;
 
     private _worldSeed : string;
     private _worldRadius : number;
@@ -23,7 +16,9 @@ export class World {
     private _landSize : number;
     private _shapeNoiseMod : number;
     private _tileTypeNoiseMod : number;
-    private _tiles : object;
+    private _noiseHeight : NoiseHeight;
+    private _noiseLand : NoiseLand;
+
 
     public constructor(
         worldSeed : string,
@@ -32,6 +27,8 @@ export class World {
         landSize : number,
         shapeNoiseMod : number,
         tileTypeNoiseMod : number,
+        noiseHeight : NoiseHeight,
+        noiseLand : NoiseLand,
     ) {
         this._worldSeed = worldSeed;
         this._hexRadius = hexRadius;
@@ -40,6 +37,13 @@ export class World {
         this._shapeNoiseMod = shapeNoiseMod;
         this._tileTypeNoiseMod = tileTypeNoiseMod;
         this._worldRadius = (hexRadius * numberOfRings) * Math.sqrt(3) + (hexRadius / 2 * Math.sqrt(3));
+        this._noiseHeight = noiseHeight;
+        this._noiseLand = noiseLand;
+
+        //populate tiles
+        this._simplex  = new SimplexNoise(this.worldSeed);
+        this.setTileCoordinates();
+
     }
 
     public get canvasWidth() {
@@ -64,6 +68,7 @@ export class World {
 
     set worldSeed(worldSeed : string) {
         this._worldSeed = worldSeed;
+        this._simplex = new SimplexNoise(this.worldSeed);
     }
 
     get worldRadius() {
@@ -110,7 +115,7 @@ export class World {
         return this._tiles;
     }
 
-    set tiles(tiles : object) {
+    set tiles(tiles : Tiles) {
         this._tiles = tiles;
     }
 
@@ -118,10 +123,38 @@ export class World {
         this._tiles[tile.q + '_' + tile.r] = tile;
     }
 
+    get noiseHeight() {
+        return this._noiseHeight;
+    }
+
+    set noiseHeight(noiseHeight : NoiseHeight) {
+        this._noiseHeight = noiseHeight;
+    }
+
+    get noiseLand() {
+        return this._noiseLand;
+    }
+
+    set noiseLand(noiseLand : NoiseLand) {
+        this._noiseLand = noiseLand;
+    }
+
+    get simplex() {
+        return this._simplex;
+    }
+
+    set simplex(simplex) {
+        this._simplex = simplex;
+    }
+
+    public reconstruct() {
+        this.setTileCoordinates();
+    }
+
     public setTileCoordinates() {
         let x = 0;
         let y = 0;
-        let qrHex = {};
+        let qrHex : Tiles = {};
 
         //center tile coordinates
         let currenthexQR = this.getInitialHexAxialCoordinates(x, y);
@@ -152,7 +185,7 @@ export class World {
     }
 
     private calculateQR(x, y) {
-        let qr : qrStruct = {
+        let qr : QrStruct = {
             q: 0,
             r: 0,
         };
@@ -163,7 +196,7 @@ export class World {
         return qr;
     }
 
-    public getInitialHexAxialCoordinates(x_, y_) {
+    private getInitialHexAxialCoordinates(x_, y_) {
         let spaceX = Math.round(x_);
         let spaceY = Math.round(y_);
         return this.calculateQR(spaceX, spaceY);
@@ -174,4 +207,79 @@ export class World {
         let spaceY = Math.round(y_ - (this._worldRadius));
         return this.calculateQR(spaceX, spaceY);
     }
+
+    public terrainHeight(n) {
+        let v = Math.abs(parseFloat(n) * 255);
+        let assetKey: string = '';
+        if (v < this.noiseHeight[TerrainHeight.DEEPWATER].height * 255) {
+            assetKey = TerrainHeight.DEEPWATER;
+        } else if (v < this.noiseHeight[TerrainHeight.SHALLOWWATER].height * 255) {
+            assetKey = TerrainHeight.SHALLOWWATER;
+        } else if (v < this.noiseHeight[TerrainHeight.BEACH].height * 255) {
+            assetKey = TerrainHeight.BEACH;
+        } else if (v < this.noiseHeight[TerrainHeight.LAND].height * 255) {
+            assetKey = TerrainHeight.LAND;
+        } else {
+            assetKey = TerrainHeight.MOUNTAIN;
+        }
+
+        return assetKey;
+    }
+
+    public terrainTypeOnLand(n) {
+        let v = Math.abs(parseFloat(n) * 255);
+        let assetKey: string = '';
+
+        if (v < this.noiseLand[AssetSprite.DESERT].height * 255) {
+            assetKey = AssetSprite.DESERT;
+        } else if (v < this.noiseLand[AssetSprite.PLAIN].height * 255) {
+            assetKey = AssetSprite.PLAIN;
+        } else if (v < this.noiseLand[AssetSprite.FOREST].height * 255) {
+            assetKey = AssetSprite.FOREST;
+        } else if (v < this.noiseLand[AssetSprite.SNOW].height * 255) {
+            assetKey = AssetSprite.SNOW;
+        } else {
+            assetKey = AssetSprite.MOUNTAIN;
+        }
+
+        return assetKey;
+    }
+
+    public getTileMapNoise(x, y, type) {
+        let r = this.hexRadius;
+        let matrixXvalue = Math.ceil((x + this.canvasCenterX) / (this.hexRadius * 2));
+        let matrixYvalue = Math.ceil((y - r + this.canvasCenterY) / (this.hexRadius * 2));
+        let matrixWidth = Math.ceil((this.canvasWidth) / (this.hexRadius * 2));
+        let matrixHeight = Math.ceil(this.canvasHeight / (this.hexRadius * 2));
+
+        let noiseMod: number = 0;
+        if (type === 'height') {
+            noiseMod = this.shapeNoiseMod;
+        } else if (type === 'terrainType') {
+            noiseMod = this.tileTypeNoiseMod;
+        }
+
+        let simplexNoiseValue = this._simplex.noise2D(
+            Number(matrixXvalue / noiseMod),
+            Number(matrixYvalue / noiseMod)
+        );
+
+        let value2d = this.map_function(simplexNoiseValue, -1.0, 1.0, 0.0, 1.0);
+
+        let dist = Math.sqrt(
+            Math.pow(matrixXvalue - matrixWidth / 2, 2) +
+            Math.pow(matrixYvalue - matrixHeight / 2, 2)
+        );
+
+        let grad = dist / (this.landSize * Math.min(matrixWidth, matrixHeight));
+
+        value2d -= Math.pow(grad, 3);
+        value2d = Math.max(value2d, 0);
+
+        return value2d;
+    }
+
+    public map_function(value, in_min, in_max, out_min, out_max) {
+        return ((value - in_min) * (out_max - out_min)) / (in_max - in_min) + out_min;
+    };
 }
