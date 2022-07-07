@@ -1,4 +1,14 @@
-import {Tile, NoiseHeight, NoiseLand, QrStruct, Tiles, TerrainHeight, AssetSprite } from '../types/worldTypes';
+import {
+    AssetSprite,
+    NoiseHeight,
+    NoiseLand,
+    QrStruct,
+    TerrainHeight,
+    TerrainSubType,
+    TerrainType,
+    Tile,
+    Tiles
+} from '../types/worldTypes';
 import SimplexNoise from 'simplex-noise';
 
 export class WorldInstance {
@@ -154,7 +164,7 @@ export class WorldInstance {
     public setTileCoordinates() {
         let x = 0;
         let y = 0;
-        let qrHex : Tiles = {};
+        let qrHex : object = {};
 
         //center tile coordinates
         let currenthexQR = this.getInitialHexAxialCoordinates(x, y);
@@ -180,8 +190,54 @@ export class WorldInstance {
                 }
             }
         }
+        //this.tiles = qrHex;
+        this.populateTileTerrainType(qrHex);
+    }
 
-        this.tiles = qrHex;
+    //populate
+    private populateTileTerrainType(tiles) {
+        for (let key in tiles) {
+            let value2d = this.getTileMapNoise(tiles[key].x, tiles[key].y, 'height');
+            let terrainHeight = this.terrainHeight(value2d);
+
+            let terrainType;
+            let terrainSubType;
+            let terrainAssetKey;
+
+            switch (terrainHeight) {
+                case TerrainHeight.DEEPWATER:
+                    terrainType = TerrainType.WATER;
+                    terrainSubType = TerrainSubType.DEEPWATER;
+                    terrainAssetKey = AssetSprite.DARKWATER;
+                    break;
+                case TerrainHeight.SHALLOWWATER:
+                    terrainType = TerrainType.WATER;
+                    terrainSubType = TerrainSubType.SHALLOWWATER;
+                    terrainAssetKey = AssetSprite.LIGHTWATER;
+                    break;
+                case TerrainHeight.BEACH:
+                    terrainType = TerrainType.DESERT;
+                    terrainSubType = TerrainSubType.BEACH;
+                    terrainAssetKey = AssetSprite.DESERT;
+                    break;
+                case TerrainHeight.LAND:
+                    //if Land we use a new noise for creating more caotic tiles on land
+                    value2d = this.getTileMapNoise(tiles[key].x, tiles[key].y, 'terrainType');
+                    terrainType = this.terrainTypeOnLand(value2d);
+                    terrainSubType = terrainType;
+                    break;
+                case TerrainHeight.MOUNTAIN:
+                    terrainType = TerrainType.MOUNTAIN;
+                    terrainSubType = TerrainSubType.MOUNTAIN;
+                    terrainAssetKey = AssetSprite.MOUNTAIN;
+                    break;
+                default:
+                    console.log(terrainHeight + ' has no asset to display.')
+            }
+            tiles[key].terrainType = terrainType;
+            tiles[key].terrainSubType = terrainSubType;
+        }
+        this._tiles = tiles;
     }
 
     private calculateQR(x, y) {
@@ -228,21 +284,21 @@ export class WorldInstance {
 
     public terrainTypeOnLand(n) {
         let v = Math.abs(parseFloat(n) * 255);
-        let assetKey: string = '';
+        let terrainType : TerrainType;
 
-        if (v < this.noiseLand[AssetSprite.DESERT].height * 255) {
-            assetKey = AssetSprite.DESERT;
-        } else if (v < this.noiseLand[AssetSprite.PLAIN].height * 255) {
-            assetKey = AssetSprite.PLAIN;
-        } else if (v < this.noiseLand[AssetSprite.FOREST].height * 255) {
-            assetKey = AssetSprite.FOREST;
-        } else if (v < this.noiseLand[AssetSprite.SNOW].height * 255) {
-            assetKey = AssetSprite.SNOW;
+        if (v < this.noiseLand[TerrainType.DESERT].height * 255) {
+            terrainType = TerrainType.DESERT;
+        } else if (v < this.noiseLand[TerrainType.PLAIN].height * 255) {
+            terrainType = TerrainType.PLAIN;
+        } else if (v < this.noiseLand[TerrainType.FOREST].height * 255) {
+            terrainType = TerrainType.FOREST;
+        } else if (v < this.noiseLand[TerrainType.SNOW].height * 255) {
+            terrainType = TerrainType.SNOW;
         } else {
-            assetKey = AssetSprite.MOUNTAIN;
+            terrainType = TerrainType.MOUNTAIN;
         }
 
-        return assetKey;
+        return terrainType;
     }
 
     public getTileMapNoise(x, y, type) {

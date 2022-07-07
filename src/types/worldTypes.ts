@@ -7,7 +7,7 @@ export enum TerrainHeight {
     MOUNTAIN = 'mountain',
 }
 
-//values that a tile can have to describe to biome
+//values that a tile can have to describe the biome
 export enum TerrainType {
     DESERT = 'desert',
     PLAIN = 'plain',
@@ -15,6 +15,18 @@ export enum TerrainType {
     SNOW = 'snow',
     MOUNTAIN = 'mountain',
     WATER = 'water',
+}
+
+//values that a tile can have to describe the biome subtype
+export enum TerrainSubType {
+    DEEPWATER = 'deep water',
+    SHALLOWWATER = 'shallow water',
+    BEACH = 'beach',
+    DESERT = 'desert',
+    PLAIN = 'plain',
+    FOREST = 'forest',
+    SNOW = 'snow',
+    MOUNTAIN = 'mountain',
 }
 
 //The values are for sprites that have the same name (see texture.json)
@@ -33,6 +45,8 @@ export type Tile = {
     r: number;
     x: number;
     y: number;
+    terrainType: TerrainType,
+    terrainSubType: TerrainSubType,
 }
 
 export interface Tiles {

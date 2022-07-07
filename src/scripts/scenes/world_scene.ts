@@ -3,7 +3,7 @@ import SimplexNoise from 'simplex-noise';
 import * as dat from "dat.gui";
 import Phaser from "phaser";
 import {WorldInstance} from '../../classes/worldInstance';
-import {NoiseHeight, NoiseLand, TerrainHeight, AssetSprite } from '../../types/worldTypes';
+import {NoiseHeight, NoiseLand, TerrainHeight, AssetSprite, Tiles, Tile, TerrainSubType} from '../../types/worldTypes';
 
 export default class WorldScene extends Phaser.Scene {
 
@@ -194,55 +194,65 @@ export default class WorldScene extends Phaser.Scene {
         this.mapTexture = this.add.blitter(0, 0, 'atlas_tiles');
 
         for (let key in tiles) {
-            this.drawHexTile(tiles[key].x, tiles[key].y);
+            this.drawHexTile(tiles[key]);
         }
 
         this.mapInteractiveScene();
     }
 
     private drawCloudMap() {
-        let allCoordinates = this.world.tiles;
+        let tiles = this.world.tiles;
 
         this.cloudTexture && this.cloudTexture.destroy();
         this.cloudTexture = this.add.blitter(0, 0, 'atlas_clouds').setAlpha(0.4);
 
-        for (let key in allCoordinates) {
-            this.drawHexCloud(allCoordinates[key].x, allCoordinates[key].y);
+        for (let key in tiles) {
+            this.drawHexCloud(tiles[key]);
         }
     }
 
-    private drawHexTile(x, y) {
-        let value2d = this.world.getTileMapNoise(x, y, 'height');
-        let terrainHeight = this.world.terrainHeight(value2d);
+    private drawHexTile(tile : Tile) {
+
+        let x = tile.x;
+        let y = tile.y;
 
         let terrainKey;
-        switch (terrainHeight) {
-            case TerrainHeight.DEEPWATER:
+        switch (tile.terrainSubType) {
+            case TerrainSubType.DEEPWATER:
                 terrainKey = AssetSprite.DARKWATER;
                 break;
-            case TerrainHeight.SHALLOWWATER:
+            case TerrainSubType.SHALLOWWATER:
                 terrainKey = AssetSprite.LIGHTWATER;
                 break;
-            case TerrainHeight.BEACH:
+            case TerrainSubType.BEACH:
                 terrainKey = AssetSprite.DESERT;
                 break;
-            case TerrainHeight.LAND:
-                //if Land we use a new noise for creating more caotic tiles on land
-                value2d = this.world.getTileMapNoise(x, y, 'terrainType');
-                terrainKey = this.world.terrainTypeOnLand(value2d);
+            case TerrainSubType.DESERT:
+                terrainKey = AssetSprite.DESERT;
                 break;
-            case TerrainHeight.MOUNTAIN:
+            case TerrainSubType.PLAIN:
+                terrainKey = AssetSprite.PLAIN;
+                break;
+            case TerrainSubType.FOREST:
+                terrainKey = AssetSprite.FOREST;
+                break;
+            case TerrainSubType.SNOW:
+                terrainKey = AssetSprite.SNOW;
+                break;
+            case TerrainSubType.MOUNTAIN:
                 terrainKey = AssetSprite.MOUNTAIN;
                 break;
             default:
-                console.log(terrainHeight + ' has no asset to display.')
+                console.log(tile.terrainSubType + ' has no asset to display.')
         }
 
         const frameAtari = this.textures.getFrame('atlas_tiles', terrainKey);
         this.mapTexture.create(x - (Math.sqrt(3) * this.world.hexRadius / 2), y - this.world.hexRadius, frameAtari);
     }
 
-    private drawHexCloud(x, y) {
+    private drawHexCloud(tile : Tile) {
+        let x = tile.x;
+        let y = tile.y;
         let value2d = this.getCloudsNoise(x, y, 'clouds');
         let isCloud = this.getClouds(value2d);
         if (isCloud) {
@@ -257,6 +267,7 @@ export default class WorldScene extends Phaser.Scene {
             fontSize: '19px'
         });
 
+
         this.circleMapArea = this.add.circle(0, 0, this.world.worldRadius).setInteractive();
 
         this.circleMapArea.on('pointermove', (pointer, localX, localY) => {
@@ -264,7 +275,8 @@ export default class WorldScene extends Phaser.Scene {
             let tile = this.world.tiles[selectedHex.q + '_' + selectedHex.r];
 
             if (tile) {
-                text.setText('Q: ' + tile.q + ', R: ' + tile.r + ', X: ' + tile.x + ', Y: ' + tile.y);
+                text.setScale( 1 / this.cameras.main.zoom, 1 / this.cameras.main.zoom );
+                text.setText('Q: ' + tile.q + ', R: ' + tile.r + ', Type: ' + tile.terrainType + ', SubType: ' + tile.terrainSubType);
             } else {
                 text.setText('No tile selected');
             }
