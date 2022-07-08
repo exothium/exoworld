@@ -40,7 +40,7 @@ export default class ChatScene extends Phaser.Scene implements ChatListener {
 
         this.addChatActivationListener();
         //let worldscene = this.scene.get(WorldScene.SCENE_KEY);
-        this.scene.add('worldscene', WorldScene, true, { x: 0, y: 0 });
+        this.scene.start(WorldScene.SCENE_KEY);
     }
 
     onMessage(message: ChatMessageEvent): void {

@@ -29,7 +29,6 @@ export class WorldInstance {
     private _noiseHeight : NoiseHeight;
     private _noiseLand : NoiseLand;
 
-
     public constructor(
         worldSeed : string,
         hexRadius : number,
@@ -56,23 +55,23 @@ export class WorldInstance {
 
     }
 
-    public get canvasWidth() {
+    public get canvasWidth() : number {
         return this._canvasWidth;
     }
 
-    get canvasHeight() {
+    get canvasHeight() : number {
         return this._canvasHeight;
     }
 
-    get canvasCenterX() {
+    get canvasCenterX() : number {
         return this._canvasCenterX;
     }
 
-    get canvasCenterY() {
+    get canvasCenterY() : number {
         return this._canvasCenterY;
     }
 
-    get worldSeed() {
+    get worldSeed() : string {
         return this._worldSeed;
     }
 
@@ -81,15 +80,15 @@ export class WorldInstance {
         this._simplex = new SimplexNoise(this.worldSeed);
     }
 
-    get worldRadius() {
+    get worldRadius() : number {
         return this._worldRadius;
     }
 
-    get hexRadius() {
+    get hexRadius(): number {
         return this._hexRadius;
     }
 
-    get numberOfRings() {
+    get numberOfRings(): number {
         return this._numberOfRings;
     }
 
@@ -97,7 +96,7 @@ export class WorldInstance {
         this._numberOfRings = numberOfRings;
     }
 
-    get landSize() {
+    get landSize(): number {
         return this._landSize;
     }
 
@@ -105,7 +104,7 @@ export class WorldInstance {
         this._landSize = landSize;
     }
 
-    get shapeNoiseMod() {
+    get shapeNoiseMod(): number {
         return this._shapeNoiseMod;
     }
 
@@ -113,7 +112,7 @@ export class WorldInstance {
         this._shapeNoiseMod = shapeNoiseMod;
     }
 
-    get tileTypeNoiseMod() {
+    get tileTypeNoiseMod(): number {
         return this._tileTypeNoiseMod;
     }
 
@@ -121,7 +120,7 @@ export class WorldInstance {
         this._tileTypeNoiseMod = tileTypeNoiseMod;
     }
 
-    get tiles() {
+    get tiles() : Tiles {
         return this._tiles;
     }
 
@@ -133,7 +132,7 @@ export class WorldInstance {
         this._tiles[tile.q + '_' + tile.r] = tile;
     }
 
-    get noiseHeight() {
+    get noiseHeight() : NoiseHeight {
         return this._noiseHeight;
     }
 
@@ -240,7 +239,7 @@ export class WorldInstance {
         this._tiles = tiles;
     }
 
-    private calculateQR(x, y) {
+    private calculateQR(x, y) : QrStruct {
         let qr : QrStruct = {
             q: 0,
             r: 0,
@@ -252,19 +251,19 @@ export class WorldInstance {
         return qr;
     }
 
-    private getInitialHexAxialCoordinates(x_, y_) {
+    private getInitialHexAxialCoordinates(x_, y_) : QrStruct {
         let spaceX = Math.round(x_);
         let spaceY = Math.round(y_);
         return this.calculateQR(spaceX, spaceY);
     }
 
-    public getAxialCoordinatesFromOffSetCoordinates(x_, y_) {
+    public getAxialCoordinatesFromOffSetCoordinates(x_, y_) : QrStruct {
         let spaceX = Math.round(x_ - (this._worldRadius));
         let spaceY = Math.round(y_ - (this._worldRadius));
         return this.calculateQR(spaceX, spaceY);
     }
 
-    public terrainHeight(n) {
+    public terrainHeight(n) : string {
         let v = Math.abs(parseFloat(n) * 255);
         let assetKey: string = '';
         if (v < this.noiseHeight[TerrainHeight.DEEPWATER].height * 255) {
@@ -282,7 +281,7 @@ export class WorldInstance {
         return assetKey;
     }
 
-    public terrainTypeOnLand(n) {
+    public terrainTypeOnLand(n) : TerrainType {
         let v = Math.abs(parseFloat(n) * 255);
         let terrainType : TerrainType;
 
@@ -301,7 +300,7 @@ export class WorldInstance {
         return terrainType;
     }
 
-    public getTileMapNoise(x, y, type) {
+    public getTileMapNoise(x, y, type) : number {
         let r = this.hexRadius;
         let matrixXvalue = Math.ceil((x + this.canvasCenterX) / (this.hexRadius * 2));
         let matrixYvalue = Math.ceil((y - r + this.canvasCenterY) / (this.hexRadius * 2));
@@ -335,7 +334,9 @@ export class WorldInstance {
         return value2d;
     }
 
-    public map_function(value, in_min, in_max, out_min, out_max) {
+    public map_function(value, in_min, in_max, out_min, out_max) : number {
         return ((value - in_min) * (out_max - out_min)) / (in_max - in_min) + out_min;
     };
+
+
 }

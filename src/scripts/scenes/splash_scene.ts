@@ -1,6 +1,6 @@
 //import ChatScene from "./chat_scene";
 
-import MenuScene from "./menu_scene";
+import MainMenuScene from "./main_menu_scene";
 import WorldScene from "./world_scene";
 import ChatScene from "./chat_scene";
 
@@ -395,10 +395,8 @@ export default class SplashScene extends Phaser.Scene {
         }, this);
 
         this.cameras.main.once('camerafadeoutcomplete', function (camera) {
-            //ctx.scene.start(MenuScene.SCENE_KEY, { bundle:{empyt:'empty'} })
-            ctx.scene.start(ChatScene.SCENE_KEY, { nickname:"hugo" });
-
-
+            ctx.scene.start(MainMenuScene.SCENE_KEY, { bundle:{empyt:'empty'} })
+            //ctx.scene.start(ChatScene.SCENE_KEY, { nickname:"hugo" });
         }, this);
         this.cameras.main.fadeIn(ctx.totalFadeinAndOut);
 

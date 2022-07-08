@@ -1,13 +1,32 @@
 //import ChatScene from "./chat_scene";
-import SimplexNoise from 'simplex-noise';
 import * as dat from "dat.gui";
 import Phaser from "phaser";
 import {WorldInstance} from '../../classes/worldInstance';
-import {NoiseHeight, NoiseLand, TerrainHeight, AssetSprite, Tiles, Tile, TerrainSubType} from '../../types/worldTypes';
+import {
+    AssetSprite,
+    NoiseHeight,
+    NoiseLand,
+    QrStruct,
+    TerrainHeight,
+    TerrainSubType,
+    Tile
+} from '../../types/worldTypes';
+import MainMenuScene from "./main_menu_scene";
+import HudScene from "./hud_scene";
+import {EntityPlayer} from "../../classes/entityPlayer";
+import {Living, LivingStats, PlayerStats} from "../../types/entityTypes";
 
 export default class WorldScene extends Phaser.Scene {
+    static readonly SCENE_KEY = 'WORLD_SCENE';
 
-    private noiseHeight : NoiseHeight = {
+    private menuGUI;
+    private graphics!: Phaser.GameObjects.Graphics;
+    private mapTexture;
+    private cloudTexture;
+    private circleMapArea;
+    private hudScene : HudScene;
+
+    private noiseHeight: NoiseHeight = {
         [TerrainHeight.DEEPWATER]: {
             height: 0.1
         },
@@ -25,7 +44,7 @@ export default class WorldScene extends Phaser.Scene {
         }
     };
 
-    private noiseLand : NoiseLand = {
+    private noiseLand: NoiseLand = {
         desert: {
             height: 0.05
         },
@@ -43,29 +62,20 @@ export default class WorldScene extends Phaser.Scene {
         },
     };
 
-    private world = new WorldInstance(
-        'exothium',
-        16,
-        50,
-        1.5,
-        10,
-        5,
-        this.noiseHeight,
-        this.noiseLand,
-    );
-
-    private generationDetails = new dat.GUI().addFolder("Generation Details");
-    private graphics!: Phaser.GameObjects.Graphics;
-    private mapTexture;
-    private cloudTexture;
-    private circleMapArea;
+    private world: WorldInstance;
 
     private opts = {
-        clouds_type_noise_mod: this.world.numberOfRings * 0.1,
-        rings: this.world.numberOfRings,
+        clouds_type_noise_mod: 0,
+        rings: 0,
         day: 1,
         timerAux: 0,
     };
+
+    private player: EntityPlayer;
+
+    constructor() {
+        super(WorldScene.SCENE_KEY);
+    }
 
     private setup() {
         this.world.reconstruct();
@@ -77,46 +87,48 @@ export default class WorldScene extends Phaser.Scene {
         this.graphics = this.add.graphics();
     }
 
-    create() {
-        this.generationDetails.open();
+    create(data) {
 
-        let controllers = {
-            worldSeed: this.world.worldSeed,
-            landSize: this.world.landSize,
-            numberOfRings: this.world.numberOfRings,
-            shapeNoiseMod: this.world.shapeNoiseMod,
-            tileTypeNoiseMod: this.world.tileTypeNoiseMod,
-        };
+        this.world = new WorldInstance(
+            data.worldSeed,
+            16,
+            data.numberOfRings,
+            data.landSize,
+            data.shapeNoiseMod,
+            data.tileTypeNoiseMod,
+            this.noiseHeight,
+            this.noiseLand,
+        );
+        this.opts.clouds_type_noise_mod = this.world.numberOfRings * 0.1;
+        this.opts.rings = this.world.numberOfRings * 0.1;
 
-        this.generationDetails.add(controllers, "worldSeed", "").onChange((value : string) => {
-            this.world.worldSeed = value;
-            this.setup();
-        });
+        //sets camera to center of canvas
+        this.cameras.main.scrollX = -this.world.canvasCenterX;
+        this.cameras.main.scrollY = -this.world.canvasCenterY;
 
-        this.generationDetails.add(controllers, "landSize", 0, 5).onChange((value: number) => {
-            this.world.landSize = value;
-            this.setup();
-        });
+        this.createHUD();
+        this.createCameraInteraction();
+        this.setup();
+        this.createControls();
 
-        this.generationDetails.add(controllers, "numberOfRings", 0, 200).onChange((value: number) => {
-            this.world.numberOfRings = value;
-            this.setup();
-        });
+        this.spawnPlayer();
+    }
 
-        this.generationDetails.add(controllers, "shapeNoiseMod", 0, 50).onChange((value: number) => {
-            this.world.shapeNoiseMod = value;
-            this.setup();
-        });
+    update(time, delta) {
+        this.opts.timerAux += delta;
+        while (this.opts.timerAux > 1000) {
+            this.opts.day += 1;
+            this.opts.timerAux = 0;
+            this.menuGUI.updateDisplay();
+            this.drawCloudMap();
+        }
+    }
 
-        this.generationDetails.add(controllers, "tileTypeNoiseMod", 0, 50).onChange((value: number) => {
-            this.world.tileTypeNoiseMod = value;
-            this.setup();
-        });
+    private createHUD() {
+        this.hudScene = <HudScene>this.scene.get(HudScene.SCENE_KEY);
+    }
 
-
-        this.generationDetails.add(this.opts, "clouds_type_noise_mod", 0, 35).onChange(() => this.setup());
-        this.generationDetails.add(this.opts, "day", 1, 1000, 1).onChange(() => this.setup());
-
+    private createCameraInteraction() {
         this.input.on("wheel", (pointer, gameObjects, deltaX, deltaY, deltaZ) => {
             if (deltaY > 0) {
                 var newZoom = this.cameras.main.zoom - 0.1;
@@ -139,22 +151,27 @@ export default class WorldScene extends Phaser.Scene {
             this.cameras.main.scrollX -= (pointer.x - pointer.prevPosition.x) / this.cameras.main.zoom;
             this.cameras.main.scrollY -= (pointer.y - pointer.prevPosition.y) / this.cameras.main.zoom;
         });
-
-        //sets camera to center of canvas
-        this.cameras.main.scrollX = -this.world.canvasCenterX;
-        this.cameras.main.scrollY = -this.world.canvasCenterY;
-
-        this.setup();
     }
 
-    update(time, delta) {
-        this.opts.timerAux += delta;
-        while (this.opts.timerAux > 1) {
-            this.opts.day += 1;
-            this.opts.timerAux = 0;
-            this.generationDetails.updateDisplay();
-            this.drawCloudMap();
-        }
+    private createControls() {
+        this.menuGUI = new dat.GUI();
+
+        let other = this.menuGUI.addFolder("Other");
+        other.add({
+            mainMenu: () => {
+                this.menuGUI.destroy();
+                this.scene.start(
+                    MainMenuScene.SCENE_KEY,
+                );
+            }
+        }, 'mainMenu');
+        other.open();
+
+        let generationDetails = this.menuGUI.addFolder("Other Generation Details");
+        generationDetails.open();
+
+        generationDetails.add(this.opts, "clouds_type_noise_mod", 0, 100).name("cloud noise").onChange(() => this.setup());
+        generationDetails.add(this.opts, "day", 1, 365, 1).name("day").onChange(() => this.setup());
     }
 
     private getClouds(n) {
@@ -172,8 +189,8 @@ export default class WorldScene extends Phaser.Scene {
 
     private getCloudsNoise(x, y, type) {
         let day = this.opts.day;
-        let matrixXvalue = Math.ceil((x - day) / (this.world.hexRadius * 2));
-        let matrixYvalue = Math.ceil((y - day) / (this.world.hexRadius * 2));
+        let matrixXvalue = Math.ceil((x - day * 50) / (this.world.hexRadius * 2));
+        let matrixYvalue = Math.ceil((y - day * 50) / (this.world.hexRadius * 2));
 
         let noiseMod = this.opts.clouds_type_noise_mod;
 
@@ -211,7 +228,7 @@ export default class WorldScene extends Phaser.Scene {
         }
     }
 
-    private drawHexTile(tile : Tile) {
+    private drawHexTile(tile: Tile) {
 
         let x = tile.x;
         let y = tile.y;
@@ -250,7 +267,7 @@ export default class WorldScene extends Phaser.Scene {
         this.mapTexture.create(x - (Math.sqrt(3) * this.world.hexRadius / 2), y - this.world.hexRadius, frameAtari);
     }
 
-    private drawHexCloud(tile : Tile) {
+    private drawHexCloud(tile: Tile) {
         let x = tile.x;
         let y = tile.y;
         let value2d = this.getCloudsNoise(x, y, 'clouds');
@@ -262,25 +279,36 @@ export default class WorldScene extends Phaser.Scene {
     }
 
     private mapInteractiveScene() {
-
-        let text = this.add.text(0, 0, '').setStyle({
-            fontSize: '19px'
-        });
-
-
         this.circleMapArea = this.add.circle(0, 0, this.world.worldRadius).setInteractive();
-
         this.circleMapArea.on('pointermove', (pointer, localX, localY) => {
             let selectedHex = this.world.getAxialCoordinatesFromOffSetCoordinates(localX, localY);
             let tile = this.world.tiles[selectedHex.q + '_' + selectedHex.r];
-
-            if (tile) {
-                text.setScale( 1 / this.cameras.main.zoom, 1 / this.cameras.main.zoom );
-                text.setText('Q: ' + tile.q + ', R: ' + tile.r + ', Type: ' + tile.terrainType + ', SubType: ' + tile.terrainSubType);
-            } else {
-                text.setText('No tile selected');
-            }
-            console.log(tile);
+            this.hudScene.updateTileInfo(tile);
         });
+    }
+
+    private spawnPlayer() {
+        let livingType: Living = Living.PLAYER;
+        let livingStats: LivingStats = {hp: 100, stamina: 100};
+        let name: string = "Angelo";
+        let location: QrStruct = {q: 0, r: 0};
+        let isInGame = true;
+        let playerStats: PlayerStats = {hunger: 0};
+
+
+        this.player = new EntityPlayer(
+            livingType,
+            livingStats,
+            name,
+            location,
+            isInGame,
+            playerStats
+        );
+
+        this.hudScene.updatePlayerStats(this.player);
+    }
+
+    private renderPlayerOnScene() {
+
     }
 }
