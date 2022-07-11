@@ -247,55 +247,92 @@ boar
 - ItemsTypes
 - ResourceTypes
 
-### TerrainsTypes:
-- water
-- desert
-- plain
-- forest
-- mountain
-- snow
+### TerrainType:
+        DESERT = 'desert',
+        PLAIN = 'plain',
+        FOREST = 'forest',
+        SNOW = 'snow',
+        MOUNTAIN = 'mountain',
+        WATER = 'water',
 
+### TerrainHeight:
+to get the tiles for the heights. If LAND then we generate new tiles for LAND. Beach is treated as Desert for now.
 
-### ObjectTypes:
-1. bush
-2. loose stones
-3. tree
-4. stone node
-5. flint node
+        DEEPWATER = 'deepWater',
+        SHALLOWWATER = 'shallowWater',
+        BEACH = 'beach',
+        LAND = 'land',
+        MOUNTAIN = 'mountain',
+    
+### NoiseHeight:
+    
+        [TerrainHeight.DEEPWATER] : TerrainStruct,
+        [TerrainHeight.SHALLOWWATER]: TerrainStruct,
+        [TerrainHeight.BEACH]: TerrainStruct, //treated as desert
+        [TerrainHeight.LAND]: TerrainStruct,
+        [TerrainHeight.MOUNTAIN]: TerrainStruct,
 
-### LivingTypes:
-1. player
-2. creature
+### NoiseLand:
+
+        [TerrainType.DESERT]: TerrainStruct,
+        [TerrainType.PLAIN]: TerrainStruct,
+        [TerrainType.FOREST]: TerrainStruct,
+        [TerrainType.SNOW]: TerrainStruct,
+        [TerrainType.MOUNTAIN]: TerrainStruct,
+
+### ObjectType:
+
+        BUSH = 'bush',
+        TREE = 'tree',
+        LOOSESTONE = 'loose stone',
+        STONENODE = 'stone node',
+        FLINTNODE = 'flint node'
+
+### LivingType:
+
+        PLAYER = 'player',
+        CREATURE = 'creature',
 
 ### CreatureTypes:
-1. Wolf
-2. Ram
-3. Bear
-4. Hyena
-5. Giant Worm
-6. Rabbit
-7. Deer
-8. Snake
-9. Boar
 
-### ItemsTypes:
-- Axe
-- PickAxe
-- Spear
-- Fishing spear
-- Knife
-- Bedroll
-- Flint Spear
-- Flint Knife
+        WOLF = 'wolf',
+        RAM = 'ram',
+        BEAR = 'bear',
+        HYENA = 'hyena',
+        GIANTWORM = 'giant worm',
+        RABBIT = 'rabbit',
+        DEER = 'deer',
+        SNAKE = 'snake',
+        BOAR = 'boar',
+        SALMON = 'salmon',
+        SIMPLEFISH = 'simple fish'
+        
+### OwnableType 
 
-### ResourceTypes
-- Meat
-- Fish
-- Berries
-- Stone
-- Flint 
-- Wood
-- Skin
+        ITEM = 'item',
+        RESOURCE = 'resource',
+
+### ItemType:
+
+        AXE = 'axe',
+        PICKAXE = 'pickaxe',
+        SPEAR = 'spear',
+        FISHINGSPEAR = 'fishing spear',
+        KNIFE = 'knife',
+        BEDROLL = 'bedroll',
+        FLINTSPEAR = 'flint spear',
+        FLINTKNIFE = 'flint knife',
+
+### ResourceType:
+
+        MEAT = 'meat',
+        FISH = 'fish',
+        BERRY = 'berry',
+        STONE = 'stone',
+        FLINT = 'flint',
+        WOOD = 'wood',
+        SKIN = 'skin'
+
 
 #### Notes:
 Doubts:
@@ -311,16 +348,21 @@ anyone can attack with a creature, if kills the player the game will collect the
 ### World
 |      name        |      type           |      params           |      return           | 
 | ------------ | --------------- |--------------- |--------------- |
-| terrainSeed | int256 |
-| radius | int256 |
-| getWorldTile | function | [q,r] | `WorldTile`
+| _worldSeed | string |
+| _worldRadius | number |
+| _numberOfRings | number |
+| _landSize | number |
+| _shapeNoiseMod | number |
+| _tileTypeNoiseMod | number |
+| _noiseHeight | <NoiseHeight> |
+| __noiseLand | <NoiseLand> |
 
 ### WorldTile
 |      name        |      type           |      params           |      return           | 
 | ------------ | --------------- |--------------- |--------------- |
 | type | `terrain` |
-| livingEntities | arr[`EntityLiving`] | 
-| objectEntities | arr[`EntityThing`] | 
+| entityCreatures| arr[`EntityCreature`] | 
+| entityObjects | arr[`EntityObject`] | 
 
 ### WorldWeather
 |      name        |      type           |      params           |      return           | 
@@ -340,9 +382,9 @@ anyone can attack with a creature, if kills the player the game will collect the
 ### Entity ⚠️
 |      name        |      type           |      params           |      return           | 
 | ------------ | --------------- |--------------- |--------------- |
-| location | [q,r] |
-| isInteractive | bool |
-| isInGame | bool |
+| _name | string |
+| _isInteractive | boolean |
+| _isInGame | boolean |
 | interactions | arr[`Interaction`] | 
 | interact | interactions["action"] | 
 

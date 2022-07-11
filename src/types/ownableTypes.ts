@@ -3,7 +3,7 @@ export enum OwnableType {
     RESOURCE = 'resource',
 }
 
-export enum Item {
+export enum ItemType {
     AXE = 'axe',
     PICKAXE = 'pickaxe',
     SPEAR = 'spear',
@@ -14,7 +14,7 @@ export enum Item {
     FLINTKNIFE = 'flint knife',
 }
 
-export enum Resource {
+export enum ResourceType {
     MEAT = 'meat',
     FISH = 'fish',
     BERRY = 'berry',

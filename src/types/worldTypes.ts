@@ -40,7 +40,7 @@ export enum AssetSprite {
     MOUNTAIN = 'mountain'
 }
 
-export type Tile = {
+export type TileType = {
     q: number;
     r: number;
     x: number;
@@ -50,7 +50,7 @@ export type Tile = {
 }
 
 export interface Tiles {
-    [key:string] : Tile;
+    [key:string] : TileType;
 }
 
 export type TerrainStruct = {

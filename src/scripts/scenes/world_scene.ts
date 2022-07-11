@@ -9,12 +9,12 @@ import {
     QrStruct,
     TerrainHeight,
     TerrainSubType,
-    Tile
+    TileType
 } from '../../types/worldTypes';
 import MainMenuScene from "./main_menu_scene";
 import HudScene from "./hud_scene";
 import {EntityPlayer} from "../../classes/entityPlayer";
-import {Living, LivingStats, PlayerStats} from "../../types/entityTypes";
+import {LivingType, LivingStats, PlayerStats} from "../../types/entityTypes";
 
 export default class WorldScene extends Phaser.Scene {
     static readonly SCENE_KEY = 'WORLD_SCENE';
@@ -228,7 +228,7 @@ export default class WorldScene extends Phaser.Scene {
         }
     }
 
-    private drawHexTile(tile: Tile) {
+    private drawHexTile(tile: TileType) {
 
         let x = tile.x;
         let y = tile.y;
@@ -267,7 +267,7 @@ export default class WorldScene extends Phaser.Scene {
         this.mapTexture.create(x - (Math.sqrt(3) * this.world.hexRadius / 2), y - this.world.hexRadius, frameAtari);
     }
 
-    private drawHexCloud(tile: Tile) {
+    private drawHexCloud(tile: TileType) {
         let x = tile.x;
         let y = tile.y;
         let value2d = this.getCloudsNoise(x, y, 'clouds');
@@ -288,7 +288,7 @@ export default class WorldScene extends Phaser.Scene {
     }
 
     private spawnPlayer() {
-        let livingType: Living = Living.PLAYER;
+        let livingType: LivingType = LivingType.PLAYER;
         let livingStats: LivingStats = {hp: 100, stamina: 100};
         let name: string = "Angelo";
         let location: QrStruct = {q: 0, r: 0};

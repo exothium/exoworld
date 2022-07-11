@@ -1,4 +1,4 @@
-import {Tile} from "../../types/worldTypes";
+import {TileType} from "../../types/worldTypes";
 import Text = Phaser.GameObjects.Text;
 import {Entity} from "../../classes/entity";
 
@@ -16,7 +16,7 @@ export default class HudScene extends Phaser.Scene {
         this.playerStatsText = this.add.text(0, 15, "", {fontSize: '12'});
     }
 
-    public updateTileInfo(tile: Tile | undefined) {
+    public updateTileInfo(tile: TileType | undefined) {
         if (tile) {
             this.tileInfoText.setText('Q: ' + tile.q + ', R: ' + tile.r + ', Type: ' + tile.terrainType + ', SubType: ' + tile.terrainSubType);
         } else {

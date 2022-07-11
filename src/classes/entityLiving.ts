@@ -1,19 +1,18 @@
 import { Entity } from "./entity";
 import { QrStruct } from "../types/worldTypes";
-import {Living, LivingStats} from "../types/entityTypes";
+import {LivingType, LivingStats} from "../types/entityTypes";
 
 export class EntityLiving extends Entity {
-    private _livingType : Living;
+    private _livingType : LivingType;
     private _livingStats : LivingStats;
 
     constructor(
-        livingType : Living,
+        livingType : LivingType,
         livingStats : LivingStats,
         name: string,
-        location: QrStruct,
         isInGame: boolean,
         ) {
-            super(name, location, true, isInGame);
+            super(name, true, isInGame);
             this._livingType = livingType;
             this._livingStats = livingStats;
     }

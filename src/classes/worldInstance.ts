@@ -6,7 +6,7 @@ import {
     TerrainHeight,
     TerrainSubType,
     TerrainType,
-    Tile,
+    TileType,
     Tiles
 } from '../types/worldTypes';
 import SimplexNoise from 'simplex-noise';
@@ -128,7 +128,7 @@ export class WorldInstance {
         this._tiles = tiles;
     }
 
-    set tile(tile : Tile) {
+    set tile(tile : TileType) {
         this._tiles[tile.q + '_' + tile.r] = tile;
     }
 
