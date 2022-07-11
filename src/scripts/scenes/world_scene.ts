@@ -4,22 +4,23 @@ import Phaser from "phaser";
 import {WorldInstance} from '../../classes/worldInstance';
 import {
     AssetSprite,
+    MoveTypes,
     NoiseHeight,
     NoiseLand,
     QrStruct,
     TerrainHeight,
-    TerrainSubType,
-    TileType
+    TerrainSubType
 } from '../../types/worldTypes';
 import MainMenuScene from "./main_menu_scene";
 import HudScene from "./hud_scene";
 import {EntityPlayer} from "../../classes/entityPlayer";
-import {LivingType, LivingStats, PlayerStats} from "../../types/entityTypes";
+import {LivingStats, LivingType, PlayerStats} from "../../types/entityTypes";
 import {Tile} from "../../classes/tile";
 
 export default class WorldScene extends Phaser.Scene {
     static readonly SCENE_KEY = 'WORLD_SCENE';
 
+    private player_go!: Phaser.GameObjects.Image;
     private menuGUI;
     private graphics!: Phaser.GameObjects.Graphics;
     private mapTexture;
@@ -132,14 +133,14 @@ export default class WorldScene extends Phaser.Scene {
     private createCameraInteraction() {
         this.input.on("wheel", (pointer, gameObjects, deltaX, deltaY, deltaZ) => {
             if (deltaY > 0) {
-                var newZoom = this.cameras.main.zoom - 0.1;
+                let newZoom = this.cameras.main.zoom - 0.1;
                 if (newZoom > 0) {
                     this.cameras.main.setZoom(newZoom);
                 }
             }
 
             if (deltaY < 0) {
-                var newZoom = this.cameras.main.zoom + 0.1;
+                let newZoom = this.cameras.main.zoom + 0.1;
                 if (newZoom < 5) {
                     this.cameras.main.setZoom(newZoom);
                 }
@@ -173,6 +174,63 @@ export default class WorldScene extends Phaser.Scene {
 
         generationDetails.add(this.opts, "clouds_type_noise_mod", 0, 100).name("cloud noise").onChange(() => this.setup());
         generationDetails.add(this.opts, "day", 1, 365, 1).name("day").onChange(() => this.setup());
+
+        // export enum MoveTypes {
+        //     NO,
+        //     O,
+        //     SO,
+        //     SW,
+        //     W,
+        //     NW
+        // }
+
+        let move = this.menuGUI.addFolder("Move");
+        move.add({
+            "↗": () => {
+                this.movePlayer(MoveTypes.NO);
+                console.log("Selected movement: ↗ ");
+            }
+        }, '↗');
+        move.add({
+            "→": () => {
+                this.movePlayer(MoveTypes.O);
+                console.log("Selected movement: → ");
+            }
+        }, '→');
+        move.add({
+            "↘": () => {
+                this.movePlayer(MoveTypes.SO);
+                console.log("Selected movement: ↘ ");
+            }
+        }, '↘');
+        move.add({
+            "↙": () => {
+                this.movePlayer(MoveTypes.SW);
+                console.log("Selected movement: ↙ ");
+            }
+        }, '↙');
+        move.add({
+            "←": () => {
+                this.movePlayer(MoveTypes.W);
+                console.log("Selected movement: ← ");
+            }
+        }, '←');
+        move.add({
+            "↖": () => {
+                this.movePlayer(MoveTypes.NW);
+                console.log("Selected movement: ↖ ");
+            }
+        }, '↖');
+        move.open();
+
+    }
+
+    private movePlayer(direction: MoveTypes){
+        const aux_player_location = this.player.location;
+        this.world.move_player(this.player,direction);
+        console.log("Move player from " + JSON.stringify(aux_player_location) + " to:" + JSON.stringify(this.player.location))
+        this.hudScene.updatePlayerStats(this.player);
+        this.renderPlayerOnScene()
     }
 
     private getClouds(n) {
@@ -308,9 +366,15 @@ export default class WorldScene extends Phaser.Scene {
         );
 
         this.hudScene.updatePlayerStats(this.player);
+
+        //create game object and send it to position
+        let tile = this.world.getTile(this.player.location);
+        this.player_go = this.add.image(tile.positionXY.x, tile.positionXY.y,"punk");
     }
 
     private renderPlayerOnScene() {
-
+        let tile = this.world.getTile(this.player.location);
+        this.player_go.x = tile.positionXY.x;
+        this.player_go.y = tile.positionXY.y;
     }
 }

@@ -42,6 +42,15 @@ export enum AssetSprite {
     MOUNTAIN = 'mountain'
 }
 
+export enum MoveTypes {
+    NO,
+    O,
+    SO,
+    SW,
+    W,
+    NW
+}
+
 export type TileType = {
     q: number;
     r: number;

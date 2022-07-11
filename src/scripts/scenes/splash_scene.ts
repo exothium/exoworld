@@ -1,8 +1,8 @@
 //import ChatScene from "./chat_scene";
 
 import MainMenuScene from "./main_menu_scene";
-import WorldScene from "./world_scene";
-import ChatScene from "./chat_scene";
+//import WorldScene from "./world_scene";
+//import ChatScene from "./chat_scene";
 
 export default class SplashScene extends Phaser.Scene {
     static readonly SCENE_KEY = 'SPLASH_SCENE';
@@ -17,6 +17,7 @@ export default class SplashScene extends Phaser.Scene {
 
     preload() {
         this.load.image('apple', 'assets/sprites/apple.png');
+        this.load.image('punk', 'assets/sprites/punk.png');
 
         this.load.image(SplashScene.EXOWORLD_LOGO_ASSET_KEY, 'assets/img/exothium_spawned_exothium_world.png');
         var progress = this.add.graphics();
@@ -380,7 +381,7 @@ export default class SplashScene extends Phaser.Scene {
 
         ctx.add.sprite(1280/2, 720/2, SplashScene.EXOWORLD_LOGO_ASSET_KEY).setPipeline('Light2D').setAlpha(0.5);
 
-        this.cameras.main.once('camerafadeincomplete', function (camera) {
+        this.cameras.main.once('camerafadeincomplete', function () {
 
 
             ctx.input.on('pointermove', function (pointer) {
@@ -394,7 +395,7 @@ export default class SplashScene extends Phaser.Scene {
 
         }, this);
 
-        this.cameras.main.once('camerafadeoutcomplete', function (camera) {
+        this.cameras.main.once('camerafadeoutcomplete', function () {
             ctx.scene.start(MainMenuScene.SCENE_KEY, { bundle:{empyt:'empty'} })
             //ctx.scene.start(ChatScene.SCENE_KEY, { nickname:"hugo" });
         }, this);

@@ -6,39 +6,41 @@ import {
     TerrainHeight,
     TerrainSubType,
     TerrainType,
-    TileType,
-    Tiles
+    //TileType,
+    Tiles,
+    MoveTypes
 } from '../types/worldTypes';
 import {Tile} from './tile';
 import SimplexNoise from 'simplex-noise';
+import {EntityPlayer} from "./entityPlayer";
 
 export class WorldInstance {
-    private readonly _canvasWidth : number = 1280;
-    private readonly _canvasHeight : number = 720;
-    private readonly _canvasCenterX : number = this._canvasWidth / 2;
-    private readonly _canvasCenterY : number = this._canvasHeight / 2;
-    private readonly _hexRadius : number;
-    private _tiles : { [key:string] :Tile };
+    private readonly _canvasWidth: number = 1280;
+    private readonly _canvasHeight: number = 720;
+    private readonly _canvasCenterX: number = this._canvasWidth / 2;
+    private readonly _canvasCenterY: number = this._canvasHeight / 2;
+    private readonly _hexRadius: number;
+    private _tiles: { [key: string]: Tile };
     private _simplex;
 
-    private _worldSeed : string;
-    private _worldRadius : number;
-    private _numberOfRings : number;
-    private _landSize : number;
-    private _shapeNoiseMod : number;
-    private _tileTypeNoiseMod : number;
-    private _noiseHeight : NoiseHeight;
-    private _noiseLand : NoiseLand;
+    private _worldSeed: string;
+    private _worldRadius: number;
+    private _numberOfRings: number;
+    private _landSize: number;
+    private _shapeNoiseMod: number;
+    private _tileTypeNoiseMod: number;
+    private _noiseHeight: NoiseHeight;
+    private _noiseLand: NoiseLand;
 
     public constructor(
-        worldSeed : string,
-        hexRadius : number,
-        numberOfRings : number,
-        landSize : number,
-        shapeNoiseMod : number,
-        tileTypeNoiseMod : number,
-        noiseHeight : NoiseHeight,
-        noiseLand : NoiseLand,
+        worldSeed: string,
+        hexRadius: number,
+        numberOfRings: number,
+        landSize: number,
+        shapeNoiseMod: number,
+        tileTypeNoiseMod: number,
+        noiseHeight: NoiseHeight,
+        noiseLand: NoiseLand,
     ) {
         this._worldSeed = worldSeed;
         this._hexRadius = hexRadius;
@@ -51,37 +53,37 @@ export class WorldInstance {
         this._noiseLand = noiseLand;
 
         //populate tiles
-        this._simplex  = new SimplexNoise(this.worldSeed);
+        this._simplex = new SimplexNoise(this.worldSeed);
         this.setTileCoordinates();
 
     }
 
-    public get canvasWidth() : number {
+    public get canvasWidth(): number {
         return this._canvasWidth;
     }
 
-    get canvasHeight() : number {
+    get canvasHeight(): number {
         return this._canvasHeight;
     }
 
-    get canvasCenterX() : number {
+    get canvasCenterX(): number {
         return this._canvasCenterX;
     }
 
-    get canvasCenterY() : number {
+    get canvasCenterY(): number {
         return this._canvasCenterY;
     }
 
-    get worldSeed() : string {
+    get worldSeed(): string {
         return this._worldSeed;
     }
 
-    set worldSeed(worldSeed : string) {
+    set worldSeed(worldSeed: string) {
         this._worldSeed = worldSeed;
         this._simplex = new SimplexNoise(this.worldSeed);
     }
 
-    get worldRadius() : number {
+    get worldRadius(): number {
         return this._worldRadius;
     }
 
@@ -93,7 +95,7 @@ export class WorldInstance {
         return this._numberOfRings;
     }
 
-    set numberOfRings(numberOfRings : number) {
+    set numberOfRings(numberOfRings: number) {
         this._numberOfRings = numberOfRings;
     }
 
@@ -101,7 +103,7 @@ export class WorldInstance {
         return this._landSize;
     }
 
-    set landSize(landSize : number) {
+    set landSize(landSize: number) {
         this._landSize = landSize;
     }
 
@@ -109,7 +111,7 @@ export class WorldInstance {
         return this._shapeNoiseMod;
     }
 
-    set shapeNoiseMod(shapeNoiseMod : number) {
+    set shapeNoiseMod(shapeNoiseMod: number) {
         this._shapeNoiseMod = shapeNoiseMod;
     }
 
@@ -117,23 +119,23 @@ export class WorldInstance {
         return this._tileTypeNoiseMod;
     }
 
-    set tileTypeNoiseMod(tileTypeNoiseMod : number) {
+    set tileTypeNoiseMod(tileTypeNoiseMod: number) {
         this._tileTypeNoiseMod = tileTypeNoiseMod;
     }
 
-    get tiles() : Tiles {
+    get tiles(): Tiles {
         return this._tiles;
     }
 
-    set tiles(tiles : Tiles) {
+    set tiles(tiles: Tiles) {
         this._tiles = tiles;
     }
 
-    get noiseHeight() : NoiseHeight {
+    get noiseHeight(): NoiseHeight {
         return this._noiseHeight;
     }
 
-    set noiseHeight(noiseHeight : NoiseHeight) {
+    set noiseHeight(noiseHeight: NoiseHeight) {
         this._noiseHeight = noiseHeight;
     }
 
@@ -141,7 +143,7 @@ export class WorldInstance {
         return this._noiseLand;
     }
 
-    set noiseLand(noiseLand : NoiseLand) {
+    set noiseLand(noiseLand: NoiseLand) {
         this._noiseLand = noiseLand;
     }
 
@@ -160,7 +162,7 @@ export class WorldInstance {
     public setTileCoordinates() {
         let x = 0;
         let y = 0;
-        let qrHex : object = {};
+        let qrHex: object = {};
 
         //center tile coordinates
         let currenthexQR = this.getInitialHexAxialCoordinates(x, y);
@@ -175,19 +177,33 @@ export class WorldInstance {
                 let diagonalX = x + Math.cos(j * 60 * radians) * centerToCloseBorder * i;
                 let diagonalY = y + Math.sin(j * 60 * radians) * centerToCloseBorder * i;
                 currenthexQR = this.getInitialHexAxialCoordinates(diagonalX, diagonalY);
-                qrHex[currenthexQR.q + '_' + currenthexQR.r] = {x: diagonalX, y: diagonalY, q: currenthexQR.q, r: currenthexQR.r};
+                qrHex[currenthexQR.q + '_' + currenthexQR.r] = {
+                    x: diagonalX,
+                    y: diagonalY,
+                    q: currenthexQR.q,
+                    r: currenthexQR.r
+                };
                 countHex++;
                 for (let k = 1; k < i; k++) {
                     let fillX = diagonalX + Math.cos((j * 60 + 120) * radians) * centerToCloseBorder * k;
                     let fillY = diagonalY + Math.sin((j * 60 + 120) * radians) * centerToCloseBorder * k;
                     currenthexQR = this.getInitialHexAxialCoordinates(fillX, fillY);
-                    qrHex[currenthexQR.q + '_' + currenthexQR.r] = {x: fillX, y: fillY, q: currenthexQR.q, r: currenthexQR.r};
+                    qrHex[currenthexQR.q + '_' + currenthexQR.r] = {
+                        x: fillX,
+                        y: fillY,
+                        q: currenthexQR.q,
+                        r: currenthexQR.r
+                    };
                     countHex++;
                 }
             }
         }
         //this.tiles = qrHex;
         this.populateTileTerrainType(qrHex);
+    }
+
+    public getTile(qr: QrStruct): Tile {
+        return this._tiles[qr.q + "_" + qr.r];
     }
 
     //populate
@@ -235,8 +251,8 @@ export class WorldInstance {
         this._tiles = tiles;
     }
 
-    private calculateQR(x, y) : QrStruct {
-        let qr : QrStruct = {
+    private calculateQR(x, y): QrStruct {
+        let qr: QrStruct = {
             q: 0,
             r: 0,
         };
@@ -247,19 +263,19 @@ export class WorldInstance {
         return qr;
     }
 
-    private getInitialHexAxialCoordinates(x_, y_) : QrStruct {
+    private getInitialHexAxialCoordinates(x_, y_): QrStruct {
         let spaceX = Math.round(x_);
         let spaceY = Math.round(y_);
         return this.calculateQR(spaceX, spaceY);
     }
 
-    public getAxialCoordinatesFromOffSetCoordinates(x_, y_) : QrStruct {
+    public getAxialCoordinatesFromOffSetCoordinates(x_, y_): QrStruct {
         let spaceX = Math.round(x_ - (this._worldRadius));
         let spaceY = Math.round(y_ - (this._worldRadius));
         return this.calculateQR(spaceX, spaceY);
     }
 
-    public terrainHeight(n) : string {
+    public terrainHeight(n): string {
         let v = Math.abs(parseFloat(n) * 255);
         let assetKey: string = '';
         if (v < this.noiseHeight[TerrainHeight.DEEPWATER].height * 255) {
@@ -277,9 +293,9 @@ export class WorldInstance {
         return assetKey;
     }
 
-    public terrainTypeOnLand(n) : TerrainType {
+    public terrainTypeOnLand(n): TerrainType {
         let v = Math.abs(parseFloat(n) * 255);
-        let terrainType : TerrainType;
+        let terrainType: TerrainType;
 
         if (v < this.noiseLand[TerrainType.DESERT].height * 255) {
             terrainType = TerrainType.DESERT;
@@ -296,7 +312,7 @@ export class WorldInstance {
         return terrainType;
     }
 
-    public getTileMapNoise(x, y, type) : number {
+    public getTileMapNoise(x, y, type): number {
         let r = this.hexRadius;
         let matrixXvalue = Math.ceil((x + this.canvasCenterX) / (this.hexRadius * 2));
         let matrixYvalue = Math.ceil((y - r + this.canvasCenterY) / (this.hexRadius * 2));
@@ -330,9 +346,65 @@ export class WorldInstance {
         return value2d;
     }
 
-    public map_function(value, in_min, in_max, out_min, out_max) : number {
+    public map_function(value, in_min, in_max, out_min, out_max): number {
         return ((value - in_min) * (out_max - out_min)) / (in_max - in_min) + out_min;
     };
 
+    public move_player(player: EntityPlayer, direction: MoveTypes) {
+        let location = <QrStruct>player.location;
+        let wantedLocation: QrStruct = {
+            q: 0,
+            r: 0,
+        };
+        switch (direction) {
+            case MoveTypes.NO:
+                wantedLocation = {
+                    q: location.q + 1,
+                    r: location.r - 1,
+                };
+                break;
+            case MoveTypes.O:
+                wantedLocation = {
+                    q: location.q + 1,
+                    r: location.r,
+                };
+                break;
+            case MoveTypes.SO:
+                wantedLocation = {
+                    q: location.q ,
+                    r: location.r + 1,
+                };
+                break;
+            case MoveTypes.SW:
+                wantedLocation = {
+                    q: location.q - 1,
+                    r: location.r + 1,
+                };
+                break;
+            case MoveTypes.W:
+                wantedLocation = {
+                    q: location.q - 1,
+                    r: location.r,
+                };
+                break;
+            case MoveTypes.NW:
+                wantedLocation = {
+                    q: location.q,
+                    r: location.r - 1,
+                };
+                break;
+        }
+        const targetTile = this.getTile(wantedLocation);
+
+        if (targetTile.terrainType !== TerrainType.WATER) {
+            //can move
+            player.location = wantedLocation;
+        } else {
+            //cant move
+            player.location = location;
+            console.log("Player cant move to water tile");
+        }
+
+    }
 
 }
