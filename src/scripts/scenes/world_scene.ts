@@ -24,7 +24,7 @@ export default class WorldScene extends Phaser.Scene {
     private mapTexture;
     private cloudTexture;
     private circleMapArea;
-    private hudScene : HudScene;
+    private hudScene: HudScene;
 
     private noiseHeight: NoiseHeight = {
         [TerrainHeight.DEEPWATER]: {

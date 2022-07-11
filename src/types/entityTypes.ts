@@ -11,3 +11,4 @@ export type LivingStats = {
 export type PlayerStats = {
     hunger: number,
 }
+

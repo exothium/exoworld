@@ -1,4 +1,4 @@
-import { Tile } from "../../types/worldTypes";
+import {Tile} from "../../types/worldTypes";
 import Text = Phaser.GameObjects.Text;
 import {Entity} from "../../classes/entity";
 
@@ -12,11 +12,11 @@ export default class HudScene extends Phaser.Scene {
     }
 
     init() {
-        this.tileInfoText = this.add.text(0, 0, "");
-        this.playerStatsText = this.add.text(0, 15, "");
+        this.tileInfoText = this.add.text(0, 0, "", {fontSize: '12' });
+        this.playerStatsText = this.add.text(0, 15, "", {fontSize: '12'});
     }
 
-    public updateTileInfo(tile : Tile | undefined) {
+    public updateTileInfo(tile: Tile | undefined) {
         if (tile) {
             this.tileInfoText.setText('Q: ' + tile.q + ', R: ' + tile.r + ', Type: ' + tile.terrainType + ', SubType: ' + tile.terrainSubType);
         } else {
@@ -24,7 +24,7 @@ export default class HudScene extends Phaser.Scene {
         }
     }
 
-    public updatePlayerStats(entity : Entity) {
+    public updatePlayerStats(entity: Entity) {
         this.playerStatsText.setText(JSON.stringify(entity));
     }
 }
