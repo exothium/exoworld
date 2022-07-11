@@ -123,129 +123,19 @@ getInventory()
 	- resource
 - Loot
 
-
 ## Enums
-- TerrainTypes
-- ObjectTypes
-- LivingTypes
-- CreatureTypes
-- ItemsTypes
-- ResourceTypes
-
-```mermaid
-classDiagram
-class EnumEntityLivingType{
-
-player
-
-creature
-
-}
-
-class EnumTerrainTypes{
-
-water
-
-desert
-
-plain
-
-forest
-
-mountain
-
-snow
-
-}
-
-class EnumObjectTypes{
-
-bush
-
-loose stones
-
-tree
-
-stone node
-
-mountain
-
-flint node
-
-}
-
-class EnumItemTypes{
-
-axe
-
-pick axe
-
-spear
-
-fishing spear
-
-knife
-
-bedroll
-
-flint spear
-
-flint knife
-
-}
-
-class EnumResourceTypes{
-
-meat
-
-fish
-
-berries
-
-stone
-
-flint
-
-wood
-
-skin
-
-}
-
-class EnumCreatureTypes{
-
-wolf
-
-ram
-
-bear
-
-hyena
-
-giant worm
-
-rabbit
-
-deer
-
-snake
-
-boar
-
-}
-```
-
-
-
-
-
-## Enums
-- TerrainTypes
-- ObjectTypes
-- LivingTypes
-- CreatureTypes
-- ItemsTypes
-- ResourceTypes
+- TerrainType
+- TerrainSubType
+    - values that a tile can have to describe the biome subtype
+- TerrainHeight
+    - to get the tiles for the heights. If LAND then we generate new tiles for LAND. Beach is treated as Desert for now.
+- NoiseHeight
+- NoiseLand
+- ObjectType
+- LivingType
+- CreatureType
+- ItemsType
+- ResourceType
 
 ### TerrainType:
         DESERT = 'desert',
@@ -254,9 +144,19 @@ boar
         SNOW = 'snow',
         MOUNTAIN = 'mountain',
         WATER = 'water',
+        
+### TerrainSubType: 
+
+        DEEPWATER = 'deep water',
+        SHALLOWWATER = 'shallow water',
+        BEACH = 'beach',
+        DESERT = 'desert',
+        PLAIN = 'plain',
+        FOREST = 'forest',
+        SNOW = 'snow',
+        MOUNTAIN = 'mountain',
 
 ### TerrainHeight:
-to get the tiles for the heights. If LAND then we generate new tiles for LAND. Beach is treated as Desert for now.
 
         DEEPWATER = 'deepWater',
         SHALLOWWATER = 'shallowWater',
