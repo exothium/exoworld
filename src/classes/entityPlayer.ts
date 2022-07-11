@@ -21,4 +21,12 @@ export class EntityPlayer extends EntityLiving {
         this._playerStats = playerStats;
         this._location = location;
     }
+
+    set location(location : QrStruct) {
+        this._location = location;
+    }
+
+    get location() {
+        return this._location;
+    }
 }
