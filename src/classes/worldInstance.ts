@@ -9,6 +9,7 @@ import {
     TileType,
     Tiles
 } from '../types/worldTypes';
+import {Tile} from './tile';
 import SimplexNoise from 'simplex-noise';
 
 export class WorldInstance {
@@ -17,7 +18,7 @@ export class WorldInstance {
     private readonly _canvasCenterX : number = this._canvasWidth / 2;
     private readonly _canvasCenterY : number = this._canvasHeight / 2;
     private readonly _hexRadius : number;
-    private _tiles : Tiles;
+    private _tiles : { [key:string] :Tile };
     private _simplex;
 
     private _worldSeed : string;
@@ -128,10 +129,6 @@ export class WorldInstance {
         this._tiles = tiles;
     }
 
-    set tile(tile : TileType) {
-        this._tiles[tile.q + '_' + tile.r] = tile;
-    }
-
     get noiseHeight() : NoiseHeight {
         return this._noiseHeight;
     }
@@ -233,8 +230,7 @@ export class WorldInstance {
                 default:
                     console.log(terrainHeight + ' has no asset to display.')
             }
-            tiles[key].terrainType = terrainType;
-            tiles[key].terrainSubType = terrainSubType;
+            tiles[key] = new Tile(tiles[key].q, tiles[key].r, tiles[key].x, tiles[key].y, terrainType, terrainSubType);
         }
         this._tiles = tiles;
     }

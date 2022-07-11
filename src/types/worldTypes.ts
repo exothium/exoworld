@@ -1,4 +1,6 @@
 //to get the tiles for the heights. If LAND then we generate new tiles for LAND. Beach is treated as Desert for now.
+import {Tile} from "../classes/tile";
+
 export enum TerrainHeight {
     DEEPWATER = 'deepWater',
     SHALLOWWATER = 'shallowWater',
@@ -50,7 +52,7 @@ export type TileType = {
 }
 
 export interface Tiles {
-    [key:string] : TileType;
+    [key:string] : Tile;
 }
 
 export type TerrainStruct = {

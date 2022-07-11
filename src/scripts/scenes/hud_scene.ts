@@ -1,6 +1,7 @@
 import {TileType} from "../../types/worldTypes";
 import Text = Phaser.GameObjects.Text;
 import {Entity} from "../../classes/entity";
+import {Tile} from "../../classes/tile";
 
 export default class HudScene extends Phaser.Scene {
     static readonly SCENE_KEY = 'HUD_SCENE';
@@ -16,9 +17,12 @@ export default class HudScene extends Phaser.Scene {
         this.playerStatsText = this.add.text(0, 15, "", {fontSize: '12'});
     }
 
-    public updateTileInfo(tile: TileType | undefined) {
+    public updateTileInfo(tile: Tile | undefined) {
         if (tile) {
-            this.tileInfoText.setText('Q: ' + tile.q + ', R: ' + tile.r + ', Type: ' + tile.terrainType + ', SubType: ' + tile.terrainSubType);
+            let QRTile = tile.positionQR;
+            let q = QRTile.q;
+            let r = QRTile.r;
+            this.tileInfoText.setText('Q: ' + q + ', R: ' + r + ', Type: ' + tile.terrainType + ', SubType: ' + tile.terrainSubType);
         } else {
             this.tileInfoText.setText('No tile selected');
         }

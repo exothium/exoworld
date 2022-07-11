@@ -15,6 +15,7 @@ import MainMenuScene from "./main_menu_scene";
 import HudScene from "./hud_scene";
 import {EntityPlayer} from "../../classes/entityPlayer";
 import {LivingType, LivingStats, PlayerStats} from "../../types/entityTypes";
+import {Tile} from "../../classes/tile";
 
 export default class WorldScene extends Phaser.Scene {
     static readonly SCENE_KEY = 'WORLD_SCENE';
@@ -228,10 +229,10 @@ export default class WorldScene extends Phaser.Scene {
         }
     }
 
-    private drawHexTile(tile: TileType) {
-
-        let x = tile.x;
-        let y = tile.y;
+    private drawHexTile(tile: Tile) {
+        let XYTile = tile.positionXY;
+        let x = XYTile.x;
+        let y = XYTile.y;
 
         let terrainKey;
         switch (tile.terrainSubType) {
@@ -267,9 +268,10 @@ export default class WorldScene extends Phaser.Scene {
         this.mapTexture.create(x - (Math.sqrt(3) * this.world.hexRadius / 2), y - this.world.hexRadius, frameAtari);
     }
 
-    private drawHexCloud(tile: TileType) {
-        let x = tile.x;
-        let y = tile.y;
+    private drawHexCloud(tile: Tile) {
+        let XYTile = tile.positionXY;
+        let x = XYTile.x;
+        let y = XYTile.y;
         let value2d = this.getCloudsNoise(x, y, 'clouds');
         let isCloud = this.getClouds(value2d);
         if (isCloud) {
