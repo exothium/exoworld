@@ -89,3 +89,5 @@ export type QrStruct = {
     r: number;
 }
 
+
+

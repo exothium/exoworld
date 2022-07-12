@@ -12,6 +12,7 @@ import {
 } from '../types/worldTypes';
 import {Tile} from './tile';
 import SimplexNoise from 'simplex-noise';
+import { EntityObjectSpawner } from './helperClasses/entityObjectSpawner';
 import {EntityPlayer} from "./entityPlayer";
 
 export class WorldInstance {
@@ -162,11 +163,11 @@ export class WorldInstance {
     public setTileCoordinates() {
         let x = 0;
         let y = 0;
-        let qrHex: object = {};
+        let tiles : object = {};
 
         //center tile coordinates
         let currenthexQR = this.getInitialHexAxialCoordinates(x, y);
-        qrHex[currenthexQR.q + '_' + currenthexQR.r] = {x: x, y: y, q: currenthexQR.q, r: currenthexQR.r};
+        tiles[currenthexQR.q + '_' + currenthexQR.r] = {x: x, y: y, q: currenthexQR.q, r: currenthexQR.r};
 
         let centerToCloseBorder = (this.hexRadius) * Math.sqrt(3);
         let radians = Math.PI / 180;
@@ -177,18 +178,13 @@ export class WorldInstance {
                 let diagonalX = x + Math.cos(j * 60 * radians) * centerToCloseBorder * i;
                 let diagonalY = y + Math.sin(j * 60 * radians) * centerToCloseBorder * i;
                 currenthexQR = this.getInitialHexAxialCoordinates(diagonalX, diagonalY);
-                qrHex[currenthexQR.q + '_' + currenthexQR.r] = {
-                    x: diagonalX,
-                    y: diagonalY,
-                    q: currenthexQR.q,
-                    r: currenthexQR.r
-                };
+                tiles[currenthexQR.q + '_' + currenthexQR.r] = {x: diagonalX, y: diagonalY, q: currenthexQR.q, r: currenthexQR.r};
                 countHex++;
                 for (let k = 1; k < i; k++) {
                     let fillX = diagonalX + Math.cos((j * 60 + 120) * radians) * centerToCloseBorder * k;
                     let fillY = diagonalY + Math.sin((j * 60 + 120) * radians) * centerToCloseBorder * k;
                     currenthexQR = this.getInitialHexAxialCoordinates(fillX, fillY);
-                    qrHex[currenthexQR.q + '_' + currenthexQR.r] = {
+                    tiles[currenthexQR.q + '_' + currenthexQR.r] = {
                         x: fillX,
                         y: fillY,
                         q: currenthexQR.q,
@@ -198,8 +194,7 @@ export class WorldInstance {
                 }
             }
         }
-        //this.tiles = qrHex;
-        this.populateTileTerrainType(qrHex);
+        this.populateTileTerrainType(tiles);
     }
 
     public getTile(qr: QrStruct): Tile {
@@ -246,7 +241,8 @@ export class WorldInstance {
                 default:
                     console.log(terrainHeight + ' has no asset to display.')
             }
-            tiles[key] = new Tile(tiles[key].q, tiles[key].r, tiles[key].x, tiles[key].y, terrainType, terrainSubType);
+
+            tiles[key] = new Tile(tiles[key].q, tiles[key].r, tiles[key].x, tiles[key].y, terrainType, terrainSubType, false);
         }
         this._tiles = tiles;
     }
@@ -331,7 +327,7 @@ export class WorldInstance {
             Number(matrixYvalue / noiseMod)
         );
 
-        let value2d = this.map_function(simplexNoiseValue, -1.0, 1.0, 0.0, 1.0);
+        let value2d = this.mapFunction(simplexNoiseValue, -1.0, 1.0, 0.0, 1.0);
 
         let dist = Math.sqrt(
             Math.pow(matrixXvalue - matrixWidth / 2, 2) +
@@ -346,11 +342,11 @@ export class WorldInstance {
         return value2d;
     }
 
-    public map_function(value, in_min, in_max, out_min, out_max): number {
+    public mapFunction(value, in_min, in_max, out_min, out_max): number {
         return ((value - in_min) * (out_max - out_min)) / (in_max - in_min) + out_min;
     };
 
-    public move_player(player: EntityPlayer, direction: MoveTypes) {
+    public movePlayer(player: EntityPlayer, direction: MoveTypes) {
         let location = <QrStruct>player.location;
         let wantedLocation: QrStruct = {
             q: 0,
@@ -394,11 +390,15 @@ export class WorldInstance {
                 };
                 break;
         }
-        const targetTile = this.getTile(wantedLocation);
+        const targetTile : Tile = this.getTile(wantedLocation);
+
 
         if (targetTile.terrainType !== TerrainType.WATER) {
             //can move
             player.location = wantedLocation;
+            if(!targetTile.isExplored) {
+                targetTile.isExplored = true
+            }
         } else {
             //cant move
             player.location = location;

@@ -7,10 +7,9 @@ export class EntityObject extends Entity {
 
     constructor(
         objectType : ObjectType,
-        name: string,
         isInGame: boolean,
     ) {
-        super(name, true, isInGame);
+        super(objectType, true, isInGame);
         this._objectType = objectType;
     }
 }

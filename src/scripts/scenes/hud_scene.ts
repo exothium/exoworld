@@ -22,7 +22,7 @@ export default class HudScene extends Phaser.Scene {
             let QRTile = tile.positionQR;
             let q = QRTile.q;
             let r = QRTile.r;
-            this.tileInfoText.setText('Q: ' + q + ', R: ' + r + ', Type: ' + tile.terrainType + ', SubType: ' + tile.terrainSubType);
+            this.tileInfoText.setText('Q: ' + q + ', R: ' + r + ', Type: ' + tile.terrainType + ', SubType: ' + tile.terrainSubType + ', Explored: ' + tile.isExplored);
         } else {
             this.tileInfoText.setText('No tile selected');
         }

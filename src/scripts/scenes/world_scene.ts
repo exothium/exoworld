@@ -227,10 +227,11 @@ export default class WorldScene extends Phaser.Scene {
 
     private movePlayer(direction: MoveTypes){
         const aux_player_location = this.player.location;
-        this.world.move_player(this.player,direction);
-        console.log("Move player from " + JSON.stringify(aux_player_location) + " to:" + JSON.stringify(this.player.location))
+        this.world.movePlayer(this.player, direction);
+        console.log("Move player from " + JSON.stringify(aux_player_location) + " to:" + JSON.stringify(this.player.location));
+
         this.hudScene.updatePlayerStats(this.player);
-        this.renderPlayerOnScene()
+        this.renderPlayerOnScene();
     }
 
     private getClouds(n) {
@@ -258,7 +259,7 @@ export default class WorldScene extends Phaser.Scene {
             Number(matrixYvalue / noiseMod)
         );
 
-        let value2d = this.world.map_function(simplexNoiseValue, -1.0, 1.0, 0.0, 1.0);
+        let value2d = this.world.mapFunction(simplexNoiseValue, -1.0, 1.0, 0.0, 1.0);
 
         return value2d;
     }
@@ -368,7 +369,8 @@ export default class WorldScene extends Phaser.Scene {
         this.hudScene.updatePlayerStats(this.player);
 
         //create game object and send it to position
-        let tile = this.world.getTile(this.player.location);
+        let tile : Tile = this.world.getTile(this.player.location);
+        tile.isExplored = true;
         this.player_go = this.add.image(tile.positionXY.x, tile.positionXY.y,"punk");
     }
 

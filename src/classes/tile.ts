@@ -8,6 +8,7 @@ export class Tile {
     private _y: number;
     private _terrainType: TerrainType;
     private _terrainSubType: TerrainSubType;
+    private _isExplored: boolean;
 
     public constructor(
         q: number,
@@ -16,6 +17,7 @@ export class Tile {
         y: number,
         terrainType: TerrainType,
         terrainSubType: TerrainSubType,
+        isExplored: boolean,
     ) {
         this._q = q;
         this._r = r;
@@ -23,6 +25,7 @@ export class Tile {
         this._y = y;
         this._terrainType = terrainType;
         this._terrainSubType = terrainSubType;
+        this._isExplored = isExplored;
     }
 
     get positionQR(): QrStruct {
@@ -45,6 +48,14 @@ export class Tile {
 
     get terrainSubType() : TerrainSubType {
         return this._terrainSubType;
+    }
+
+    get isExplored() : boolean {
+        return this._isExplored;
+    }
+
+    set isExplored(isExplored : boolean) {
+        this._isExplored = isExplored;
     }
 
 }
