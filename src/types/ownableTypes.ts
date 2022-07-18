@@ -1,3 +1,5 @@
+import {Item} from "../classes/item";
+
 export enum OwnableType {
     ITEM = 'item',
     RESOURCE = 'resource',
@@ -23,4 +25,5 @@ export enum ResourceType {
     WOOD = 'wood',
     SKIN = 'skin'
 }
+
 
