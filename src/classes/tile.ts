@@ -1,4 +1,6 @@
 import {QrStruct, TerrainSubType, TerrainType} from "../types/worldTypes";
+import {EntityObject} from "./entityObject";
+import {EntityCreature} from "./entityCreature";
 
 
 export class Tile {
@@ -9,6 +11,8 @@ export class Tile {
     private _terrainType: TerrainType;
     private _terrainSubType: TerrainSubType;
     private _isExplored: boolean;
+    private _entityObjects : EntityObject[];
+    private _entityCreatures : EntityCreature[];
 
     public constructor(
         q: number,
@@ -18,6 +22,8 @@ export class Tile {
         terrainType: TerrainType,
         terrainSubType: TerrainSubType,
         isExplored: boolean,
+        entityObjects: EntityObject[],
+        entityCreatures: EntityCreature[],
     ) {
         this._q = q;
         this._r = r;
@@ -26,6 +32,8 @@ export class Tile {
         this._terrainType = terrainType;
         this._terrainSubType = terrainSubType;
         this._isExplored = isExplored;
+        this._entityObjects = entityObjects;
+        this._entityCreatures = entityCreatures;
     }
 
     get positionQR(): QrStruct {
@@ -56,6 +64,22 @@ export class Tile {
 
     set isExplored(isExplored : boolean) {
         this._isExplored = isExplored;
+    }
+
+    get entityObjects() : EntityObject[] {
+        return this._entityObjects;
+    }
+
+    set entityObjects(entityObjects : EntityObject[]) {
+        this._entityObjects = entityObjects;
+    }
+
+    get entityCreatures() : EntityCreature[] {
+        return this._entityCreatures;
+    }
+
+    set entityCreatures(entityCreatures : EntityCreature[]) {
+        this._entityCreatures = entityCreatures;
     }
 
 }

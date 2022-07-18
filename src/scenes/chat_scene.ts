@@ -1,6 +1,6 @@
-import ChatListener from "../chat/chat_listener";
-import ChatMessageEvent from "../chat/chat_message_event";
-import ChatService from "../chat/chat_service";
+import ChatListener from "../scripts/chat/chat_listener";
+import ChatMessageEvent from "../scripts/chat/chat_message_event";
+import ChatService from "../scripts/chat/chat_service";
 import WorldScene from "./world_scene";
 
 export default class ChatScene extends Phaser.Scene implements ChatListener {

@@ -1,7 +1,7 @@
 //import ChatScene from "./chat_scene";
 import * as dat from "dat.gui";
 import Phaser from "phaser";
-import {WorldInstance} from '../../classes/worldInstance';
+import {WorldInstance} from '../classes/worldInstance';
 import {
     AssetSprite,
     MoveTypes,
@@ -10,12 +10,15 @@ import {
     QrStruct,
     TerrainHeight,
     TerrainSubType
-} from '../../types/worldTypes';
+} from '../types/worldTypes';
 import MainMenuScene from "./main_menu_scene";
 import HudScene from "./hud_scene";
-import {EntityPlayer} from "../../classes/entityPlayer";
-import {LivingStats, LivingType, PlayerStats} from "../../types/entityTypes";
-import {Tile} from "../../classes/tile";
+import {EntityPlayer} from "../classes/entityPlayer";
+import {LivingStats, LivingType, PlayerStats} from "../types/entityTypes";
+import {Tile} from "../classes/tile";
+import {EntityTileSpawner} from "../classes/helperClasses/entityTileSpawner";
+import {EntityObject} from "../classes/entityObject";
+import {EntityCreature} from "../classes/entityCreature";
 
 export default class WorldScene extends Phaser.Scene {
     static readonly SCENE_KEY = 'WORLD_SCENE';
@@ -349,16 +352,12 @@ export default class WorldScene extends Phaser.Scene {
     }
 
     private spawnPlayer() {
-        let livingType: LivingType = LivingType.PLAYER;
         let livingStats: LivingStats = {hp: 100, stamina: 100};
         let name: string = "Angelo";
         let location: QrStruct = {q: 0, r: 0};
         let isInGame = true;
         let playerStats: PlayerStats = {hunger: 0};
-
-
         this.player = new EntityPlayer(
-            livingType,
             livingStats,
             name,
             location,
@@ -371,6 +370,9 @@ export default class WorldScene extends Phaser.Scene {
         //create game object and send it to position
         let tile : Tile = this.world.getTile(this.player.location);
         tile.isExplored = true;
+        let tileEntities : { entityObjects: EntityObject [], entityCreatures: EntityCreature[] } = EntityTileSpawner.entitiesOnTile(tile.terrainType);
+        tile.entityObjects = tileEntities.entityObjects;
+        tile.entityCreatures = tileEntities.entityCreatures;
         this.player_go = this.add.image(tile.positionXY.x, tile.positionXY.y,"punk");
     }
 

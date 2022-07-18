@@ -12,8 +12,10 @@ import {
 } from '../types/worldTypes';
 import {Tile} from './tile';
 import SimplexNoise from 'simplex-noise';
-import { EntityObjectSpawner } from './helperClasses/entityObjectSpawner';
+import {EntityTileSpawner} from './helperClasses/entityTileSpawner';
 import {EntityPlayer} from "./entityPlayer";
+import {EntityObject} from "./entityObject";
+import {EntityCreature} from "./entityCreature";
 
 export class WorldInstance {
     private readonly _canvasWidth: number = 1280;
@@ -163,7 +165,7 @@ export class WorldInstance {
     public setTileCoordinates() {
         let x = 0;
         let y = 0;
-        let tiles : object = {};
+        let tiles: object = {};
 
         //center tile coordinates
         let currenthexQR = this.getInitialHexAxialCoordinates(x, y);
@@ -178,7 +180,12 @@ export class WorldInstance {
                 let diagonalX = x + Math.cos(j * 60 * radians) * centerToCloseBorder * i;
                 let diagonalY = y + Math.sin(j * 60 * radians) * centerToCloseBorder * i;
                 currenthexQR = this.getInitialHexAxialCoordinates(diagonalX, diagonalY);
-                tiles[currenthexQR.q + '_' + currenthexQR.r] = {x: diagonalX, y: diagonalY, q: currenthexQR.q, r: currenthexQR.r};
+                tiles[currenthexQR.q + '_' + currenthexQR.r] = {
+                    x: diagonalX,
+                    y: diagonalY,
+                    q: currenthexQR.q,
+                    r: currenthexQR.r
+                };
                 countHex++;
                 for (let k = 1; k < i; k++) {
                     let fillX = diagonalX + Math.cos((j * 60 + 120) * radians) * centerToCloseBorder * k;
@@ -242,7 +249,18 @@ export class WorldInstance {
                     console.log(terrainHeight + ' has no asset to display.')
             }
 
-            tiles[key] = new Tile(tiles[key].q, tiles[key].r, tiles[key].x, tiles[key].y, terrainType, terrainSubType, false);
+            tiles[key] =
+                new Tile(
+                    tiles[key].q,
+                    tiles[key].r,
+                    tiles[key].x,
+                    tiles[key].y,
+                    terrainType,
+                    terrainSubType,
+                    false,
+                    [],
+                    [],
+                );
         }
         this._tiles = tiles;
     }
@@ -367,7 +385,7 @@ export class WorldInstance {
                 break;
             case MoveTypes.SO:
                 wantedLocation = {
-                    q: location.q ,
+                    q: location.q,
                     r: location.r + 1,
                 };
                 break;
@@ -390,14 +408,17 @@ export class WorldInstance {
                 };
                 break;
         }
-        const targetTile : Tile = this.getTile(wantedLocation);
+        const targetTile: Tile = this.getTile(wantedLocation);
 
 
         if (targetTile.terrainType !== TerrainType.WATER) {
             //can move
             player.location = wantedLocation;
-            if(!targetTile.isExplored) {
-                targetTile.isExplored = true
+            if (!targetTile.isExplored) {
+                let tileEntities : { entityObjects: EntityObject [], entityCreatures: EntityCreature[] } = EntityTileSpawner.entitiesOnTile(targetTile.terrainType);
+                targetTile.entityObjects = tileEntities.entityObjects;
+                targetTile.entityCreatures = tileEntities.entityCreatures;
+                targetTile.isExplored = true;
             }
         } else {
             //cant move

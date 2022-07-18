@@ -4,6 +4,8 @@ import MainMenuScene from './scenes/main_menu_scene'
 import SplashScene from './scenes/splash_scene'
 import WorldScene from "./scenes/world_scene";
 import HudScene from "./scenes/hud_scene";
+import UIPlugin from 'phaser3-rex-plugins/templates/ui/ui-plugin.js';
+
 
 const config = {
     type: Phaser.AUTO,
@@ -20,10 +22,15 @@ const config = {
         autoCenter: Phaser.Scale.CENTER_BOTH
     },
     backgroundColor: '#484848',
-    // render: {
-    //   //  A custom batch size of 1024 quads
-    //   batchSize: 256
-    // },
+    plugins: {
+        scene: [{
+            key: 'rexUI',
+            plugin: UIPlugin,
+            mapping: 'rexUI'
+        },
+            // ...
+        ]
+    },
     scene: [
         SplashScene,
         MainMenuScene,
@@ -31,15 +38,8 @@ const config = {
         WorldScene,
         HudScene
     ],
-    /* physics: {
-       default: 'arcade',
-       arcade: {
-         debug: false,
-         gravity: { y: 400 }
-       }
-     }*/
 }
 
 window.addEventListener('load', () => {
     const game = new Phaser.Game(config)
-})
+});

@@ -43,6 +43,7 @@
     "buffer": "^6.0.3",
     "dat.gui": "^0.7.9",
     "phaser": "^3.55.2",
+    "phaser3-rex-plugins": "^1.1.71",
     "simplex-noise": "^3.0.1",
     "socket.io-client": "^4.4.1",
     "starknet": "^3.10.1"

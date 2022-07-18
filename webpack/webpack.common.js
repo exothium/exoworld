@@ -4,7 +4,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const webpack = require('webpack')
 
 module.exports = {
-  entry: ['./src/scripts/game.ts', './webpack/credits.js', './src/starknet-web3/starknet.ts'],
+  entry: ['./src/game.ts', './webpack/credits.js', './src/starknet-web3/starknet.ts'],
   output: {
     path: path.resolve(__dirname, '../dist'),
     filename: '[name].bundle.js',

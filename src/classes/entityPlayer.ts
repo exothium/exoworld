@@ -10,14 +10,13 @@ export class EntityPlayer extends EntityLiving {
     private _location: QrStruct;
 
     constructor(
-        livingType: LivingType,
         livingStats: LivingStats,
         name: string,
         location: QrStruct,
         isInGame: boolean,
         playerStats: PlayerStats
     ) {
-        super(livingType, livingStats, name, isInGame);
+        super(livingStats, name, isInGame);
         this._playerStats = playerStats;
         this._location = location;
     }
