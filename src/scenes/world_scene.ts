@@ -347,7 +347,7 @@ export default class WorldScene extends Phaser.Scene {
         this.circleMapArea.on('pointermove', (pointer, localX, localY) => {
             let selectedHex = this.world.getAxialCoordinatesFromOffSetCoordinates(localX, localY);
             let tile = this.world.tiles[selectedHex.q + '_' + selectedHex.r];
-            this.hudScene.updateTileInfo(tile);
+            this.hudScene.tileInfo.updateTileInfo(tile);
         });
     }
 

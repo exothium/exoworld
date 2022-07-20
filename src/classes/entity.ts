@@ -18,4 +18,8 @@ export class Entity {
         this._isInteractive = isInteractive;
         this._isInGame = isInGame;
     }
+
+    get name() : string {
+        return this._name;
+    }
 }
