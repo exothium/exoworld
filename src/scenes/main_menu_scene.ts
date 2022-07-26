@@ -43,13 +43,13 @@ export default class MainMenuScene extends Phaser.Scene {
     }
 
     private createUiElements() {
-        this.add.text(643, 303, "gm ΣΧΘTHIAN! Use controls on the right side to interact", {
+        this.add.text(643, 303, "gm ΣΧΘTHIAN! Use the controls on the right side to interact", {
             color: "#262626",
             fontSize: '30px',
             fontStyle: "bold",
             fontFamily: "MondwestPixel"
         }).setOrigin(0.5);
-        this.add.text(640, 300, "gm ΣΧΘTHIAN! Use controls on the right side to interact", {
+        this.add.text(640, 300, "gm ΣΧΘTHIAN! Use the controls on the right side to interact", {
             color: "#e6992d",
             fontSize: '30px',
             fontStyle: "bold",
