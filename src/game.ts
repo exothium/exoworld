@@ -5,7 +5,7 @@ import SplashScene from './scenes/splash_scene'
 import WorldScene from "./scenes/world_scene";
 import HudScene from "./scenes/hud_scene/hud_scene";
 import UIPlugin from 'phaser3-rex-plugins/templates/ui/ui-plugin.js';
-import TileInfoScene from "./scenes/hud_scene/sub_scenes/tile_info_scene";
+import TileInfoScene from "./scenes/hud_scene/sub_scenes/tile_window_scene";
 
 
 const config = {

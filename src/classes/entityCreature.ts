@@ -14,4 +14,8 @@ export class EntityCreature extends EntityLiving {
         this._creatureType = creatureType;
     }
 
+    get creatureType() {
+        return this._creatureType;
+    }
+
 }

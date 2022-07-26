@@ -3,8 +3,7 @@ import Text = Phaser.GameObjects.Text;
 import {Entity} from "../../classes/entity";
 import {Tile} from "../../classes/tile";
 import RexUIPlugin from 'phaser3-rex-plugins/templates/ui/ui-plugin.js';
-import TileInfoOld from '../elements/tileInfoOld';
-import TileInfoScene from "./sub_scenes/tile_info_scene";
+import TileInfoScene from "./sub_scenes/tile_window_scene";
 import WorldScene from "../world_scene";
 
 

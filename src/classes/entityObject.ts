@@ -12,4 +12,8 @@ export class EntityObject extends Entity {
         super(objectType, true, isInGame);
         this._objectType = objectType;
     }
+
+    get objectType() {
+        return this._objectType;
+    }
 }

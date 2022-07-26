@@ -6,7 +6,7 @@ import {WorldInstance} from "../../../classes/worldInstance";
 import WorldScene from "../../world_scene";
 import HudScene from "../hud_scene";
 
-export default class TileInfoScene extends Phaser.Scene {
+export default class TileWindowScene extends Phaser.Scene {
     static readonly SCENE_KEY = 'TILE_INFO_SCENE';
     rexUI: RexUIPlugin;
     private worldScene : WorldScene;
@@ -23,13 +23,15 @@ export default class TileInfoScene extends Phaser.Scene {
     private _tileName;
     private _tileCoordinates;
     private _tileCreatures;
+    private _creaturesSizer;
     private _tileResources;
+    private _resourcesSizer;
     private _notExplored;
     private _moveButton;
     private _background;
 
     constructor() {
-        super(TileInfoScene.SCENE_KEY);
+        super(TileWindowScene.SCENE_KEY);
     }
 
     create() {
@@ -53,6 +55,8 @@ export default class TileInfoScene extends Phaser.Scene {
         }
         this.moveButton();
         this.background();
+
+        this.setInteractive();
     }
 
     private tileName() {
@@ -94,7 +98,7 @@ export default class TileInfoScene extends Phaser.Scene {
         let width = this._width - (2 * this._padding);
         let height = 75;
 
-        let title = this.add.text(x, y, 'Creatures:');
+        let title = this.add.text(x, y, '- Creatures').setDepth(1);
         y += this._padding;
         this._tileCreatures = this.rexUI.add.scrollablePanel({
             x: this._width / 2,
@@ -102,9 +106,6 @@ export default class TileInfoScene extends Phaser.Scene {
             width: width,
             height: height,
             scrollMode: 1,
-            // Elements
-            //background: this.rexUI.add.roundRectangle(this._width / 2, y + height / 2, width, height, 10, 0x836F7F),
-
             panel: {
                 child: this.createCreatureObjects(),
             },
@@ -124,7 +125,7 @@ export default class TileInfoScene extends Phaser.Scene {
     }
 
     private createCreatureObjects() {
-        var sizer = this.rexUI.add.sizer({
+        this._creaturesSizer = this.rexUI.add.sizer({
             orientation: 'x',
         });
 
@@ -132,10 +133,10 @@ export default class TileInfoScene extends Phaser.Scene {
         let creaturesOrganized = {};
 
         for (let i = 0; i < creatures.length; i++) {
-            if(!creaturesOrganized[creatures[i].name]) {
-                creaturesOrganized[creatures[i].name] = [];
+            if(!creaturesOrganized[creatures[i].creatureType]) {
+                creaturesOrganized[creatures[i].creatureType] = [];
             }
-            creaturesOrganized[creatures[i].name].push(creatures[i]);
+            creaturesOrganized[creatures[i].creatureType].push(creatures[i]);
         }
 
 
@@ -145,15 +146,17 @@ export default class TileInfoScene extends Phaser.Scene {
             hexContainer.add(this.add.image(0,0, 'creatureBackground'));
             hexContainer.add(this.add.image(0, 0, key));
             hexContainer.add(this.add.text(-2, 17, creaturesOrganized[key].length, {fontSize: '14px', color: 'white',}));
-            sizer.add(
+            this._creaturesSizer.add(
                 hexContainer,
                 0,
                 'left',
-                5
+                5,
+                false,
+                key,
             )
         }
-        sizer.layout();
-        return sizer;
+        this._creaturesSizer.layout();
+        return this._creaturesSizer;
     }
 
     private tileResources() {
@@ -162,7 +165,7 @@ export default class TileInfoScene extends Phaser.Scene {
         let width = this._width - (2 * this._padding);
         let height = 75;
 
-        let title = this.add.text(x, y, 'Resources:');
+        let title = this.add.text(x, y, '- Resources').setDepth(1);
         y += this._padding;
         this._tileResources = this.rexUI.add.scrollablePanel({
             x: this._width / 2,
@@ -170,9 +173,6 @@ export default class TileInfoScene extends Phaser.Scene {
             width: width,
             height: height,
             scrollMode: 1,
-            // Elements
-            //background: this.rexUI.add.roundRectangle(this._width / 2, y + height / 2, width, height, 10, 0x836F7F),
-
             panel: {
                 child: this.createResourceObjects(),
             },
@@ -200,10 +200,10 @@ export default class TileInfoScene extends Phaser.Scene {
         let resourcesOrganized = {};
 
         for (let i = 0; i < resources.length; i++) {
-            if(!resourcesOrganized[resources[i].name]) {
-                resourcesOrganized[resources[i].name] = [];
+            if(!resourcesOrganized[resources[i].objectType]) {
+                resourcesOrganized[resources[i].objectType] = [];
             }
-            resourcesOrganized[resources[i].name].push(resources[i]);
+            resourcesOrganized[resources[i].objectType].push(resources[i]);
         }
 
 
@@ -217,7 +217,9 @@ export default class TileInfoScene extends Phaser.Scene {
                 hexContainer,
                 0,
                 'left',
-                5
+                5,
+                false,
+                key,
             )
         }
         sizer.layout();
@@ -245,14 +247,6 @@ export default class TileInfoScene extends Phaser.Scene {
 
         if(neighborOfPlayer.result) {
             this._moveButton = this.add.image(this._width / 2,this._currentY + 23, 'moveButton').setInteractive();
-            this._moveButton.on('pointerdown', (pointer, localX, localY) => {
-
-                neighborOfPlayer.direction !== null && this.worldScene.world.movePlayer(neighborOfPlayer.direction);
-                this.hudScene.updatePlayerStats(this.worldScene.world.player);
-                this.worldScene.renderPlayerOnScene();
-                this.updateInfo();
-
-            });
         } else {
             this._moveButton = this.add.image(this._width / 2,this._currentY + 23, 'moveButtonDisabled');
         }
@@ -265,6 +259,19 @@ export default class TileInfoScene extends Phaser.Scene {
         this._background = this.rexUI.add.roundRectangle(this._width / 2, this._currentY / 2, this._width, this._currentY, 5, 0x436F7F);
         this._background.setDepth(0);
         this._background.setInteractive();
+    }
+
+    private setInteractive() {
+        //move button
+        let neighborOfPlayer = this.worldScene.world.isPlayerNeighbor(this._tile.positionQR);
+        this._moveButton.on('pointerdown', (pointer, localX, localY) => {
+            neighborOfPlayer.direction !== null && this.worldScene.world.movePlayer(neighborOfPlayer.direction);
+            this.hudScene.updatePlayerStats(this.worldScene.world.player);
+            this.worldScene.renderPlayerOnScene();
+            this.updateInfo();
+        });
+
+
     }
 
     public removeAll() {
