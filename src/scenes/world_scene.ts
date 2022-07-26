@@ -158,9 +158,9 @@ export default class WorldScene extends Phaser.Scene {
         other.add({
             mainMenu: () => {
                 this.menuGUI.destroy();
-                this.scene.start(
-                    MainMenuScene.SCENE_KEY,
-                );
+                this.children.removeAll();
+                this.scene.start(MainMenuScene.SCENE_KEY);
+                console.log(this.children);
             }
         }, 'mainMenu');
         other.open();
@@ -292,9 +292,10 @@ export default class WorldScene extends Phaser.Scene {
         let player = this.world.player;
         this.hudScene.updatePlayerStats(player);
         let tile = this.world.getTile(this.world.player.location);
-        if(!this.playerAsset) {
-            this.playerAsset = this.add.image(tile.positionXY.x, tile.positionXY.y, "punk");
+        if(this.playerAsset) {
+            this.playerAsset.removeFromDisplayList();
         }
+        this.playerAsset = this.add.image(tile.positionXY.x, tile.positionXY.y, "punk");
         this.playerAsset.x = tile.positionXY.x;
         this.playerAsset.y = tile.positionXY.y;
     }
