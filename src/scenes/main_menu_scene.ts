@@ -59,7 +59,7 @@ export default class MainMenuScene extends Phaser.Scene {
 
         var music = this.sound.add('tunetank');
 
-        //music.play();
+        music.play();
         this.textSong.setText('♬ Playing  Ivan Shpilevsky - The Time ‣');
 
         this.textSong.on('pointerdown', (pointer) => {
