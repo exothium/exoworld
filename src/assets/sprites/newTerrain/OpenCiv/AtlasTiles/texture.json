@@ -4,13 +4,13 @@
 			"image": "texture",
 			"format": "RGBA8888",
 			"size": {
-				"w": 252,
+				"w": 196,
 				"h": 32
 			},
 			"scale": 1,
 			"frames": [
 				{
-					"filename": "desert",
+					"filename": "dark_water",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -31,7 +31,7 @@
 					}
 				},
 				{
-					"filename": "plain",
+					"filename": "desert",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -45,7 +45,7 @@
 						"h": 32
 					},
 					"frame": {
-						"x": 32,
+						"x": 28,
 						"y": 0,
 						"w": 28,
 						"h": 32
@@ -66,49 +66,7 @@
 						"h": 32
 					},
 					"frame": {
-						"x": 64,
-						"y": 0,
-						"w": 28,
-						"h": 32
-					}
-				},
-				{
-					"filename": "mountain",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 28,
-						"h": 32
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 28,
-						"h": 32
-					},
-					"frame": {
-						"x": 96,
-						"y": 0,
-						"w": 28,
-						"h": 32
-					}
-				},
-				{
-					"filename": "dark_water",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 28,
-						"h": 32
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 28,
-						"h": 32
-					},
-					"frame": {
-						"x": 128,
+						"x": 56,
 						"y": 0,
 						"w": 28,
 						"h": 32
@@ -129,14 +87,14 @@
 						"h": 32
 					},
 					"frame": {
-						"x": 160,
+						"x": 84,
 						"y": 0,
 						"w": 28,
 						"h": 32
 					}
 				},
 				{
-					"filename": "land",
+					"filename": "mountain",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
@@ -150,7 +108,28 @@
 						"h": 32
 					},
 					"frame": {
-						"x": 192,
+						"x": 112,
+						"y": 0,
+						"w": 28,
+						"h": 32
+					}
+				},
+				{
+					"filename": "plain",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 28,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 28,
+						"h": 32
+					},
+					"frame": {
+						"x": 140,
 						"y": 0,
 						"w": 28,
 						"h": 32
@@ -171,7 +150,7 @@
 						"h": 32
 					},
 					"frame": {
-						"x": 224,
+						"x": 168,
 						"y": 0,
 						"w": 28,
 						"h": 32

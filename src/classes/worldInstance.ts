@@ -1,14 +1,14 @@
 import {
     AssetSprite,
+    Directions,
+    Neighbors,
     NoiseHeight,
     NoiseLand,
     QrStruct,
     TerrainHeight,
     TerrainSubType,
     TerrainType,
-    //TileType,
-    Tiles,
-    MoveTypes
+    Tiles
 } from '../types/worldTypes';
 import {Tile} from './tile';
 import SimplexNoise from 'simplex-noise';
@@ -16,6 +16,8 @@ import {EntityTileSpawner} from './helperClasses/entityTileSpawner';
 import {EntityPlayer} from "./entityPlayer";
 import {EntityObject} from "./entityObject";
 import {EntityCreature} from "./entityCreature";
+import world_scene from "../scenes/world_scene";
+import {LivingStats, PlayerStats} from "../types/entityTypes";
 
 export class WorldInstance {
     private readonly _canvasWidth: number = 1280;
@@ -24,6 +26,7 @@ export class WorldInstance {
     private readonly _canvasCenterY: number = this._canvasHeight / 2;
     private readonly _hexRadius: number;
     private _tiles: { [key: string]: Tile };
+    private _player: EntityPlayer;
     private _simplex;
 
     private _worldSeed: string;
@@ -57,8 +60,8 @@ export class WorldInstance {
 
         //populate tiles
         this._simplex = new SimplexNoise(this.worldSeed);
-        this.setTileCoordinates();
-
+        this.setTileCoordinates(); //spawns tiles and entities
+        this.spawnPlayer();
     }
 
     public get canvasWidth(): number {
@@ -208,6 +211,33 @@ export class WorldInstance {
         return this._tiles[qr.q + "_" + qr.r];
     }
 
+    public getTileNeighbors(qr: QrStruct): Neighbors[] {
+        let neighborTiles: Neighbors[] = [
+            {direction: Directions.NW, tile: this.getTile({q: qr.q, r: qr.r - 1})},
+            {direction: Directions.NE, tile: this.getTile({q: qr.q + 1, r: qr.r - 1})},
+            {direction: Directions.E, tile: this.getTile({q: qr.q + 1, r: qr.r})},
+            {direction: Directions.SE, tile: this.getTile({q: qr.q, r: qr.r + 1})},
+            {direction: Directions.SW, tile: this.getTile({q: qr.q - 1, r: qr.r + 1})},
+            {direction: Directions.W, tile: this.getTile({q: qr.q - 1, r: qr.r})},
+        ];
+
+        return neighborTiles;
+    }
+
+    public isPlayerNeighbor(qr: QrStruct) {
+        let playerLocation = this.player.location;
+        let playerNeighbors = this.getTileNeighbors(playerLocation);
+        let direction: Directions | null = null;
+
+        for (let i = 0; i < playerNeighbors.length; i++) {
+            if (qr.q === playerNeighbors[i].tile.positionQR.q && qr.r === playerNeighbors[i].tile.positionQR.r) {
+                direction = playerNeighbors[i].direction;
+            }
+        }
+
+        return ({result: direction !== null, direction: direction})
+    }
+
     //populate
     private populateTileTerrainType(tiles) {
         for (let key in tiles) {
@@ -263,6 +293,32 @@ export class WorldInstance {
                 );
         }
         this._tiles = tiles;
+    }
+
+    private spawnPlayer() {
+        let livingStats: LivingStats = {hp: 100, stamina: 100};
+        let name: string = "Angelo";
+        let location: QrStruct = {q: 0, r: 0};
+        let isInGame = true;
+        let playerStats: PlayerStats = {hunger: 0};
+        this._player = new EntityPlayer(
+            livingStats,
+            name,
+            location,
+            isInGame,
+            playerStats
+        );
+
+        //create game object and send it to position
+        let tile: Tile = this.getTile(this._player.location);
+        tile.isExplored = true;
+        let tileEntities: { entityObjects: EntityObject [], entityCreatures: EntityCreature[] } = EntityTileSpawner.entitiesOnTile(tile.terrainType);
+        tile.entityObjects = tileEntities.entityObjects;
+        tile.entityCreatures = tileEntities.entityCreatures;
+    }
+
+    get player() {
+        return this._player;
     }
 
     private calculateQR(x, y): QrStruct {
@@ -364,44 +420,44 @@ export class WorldInstance {
         return ((value - in_min) * (out_max - out_min)) / (in_max - in_min) + out_min;
     };
 
-    public movePlayer(player: EntityPlayer, direction: MoveTypes) {
-        let location = <QrStruct>player.location;
+    public movePlayer( direction: Directions) {
+        let location = <QrStruct>this.player.location;
         let wantedLocation: QrStruct = {
             q: 0,
             r: 0,
         };
         switch (direction) {
-            case MoveTypes.NO:
+            case Directions.NE:
                 wantedLocation = {
                     q: location.q + 1,
                     r: location.r - 1,
                 };
                 break;
-            case MoveTypes.O:
+            case Directions.E:
                 wantedLocation = {
                     q: location.q + 1,
                     r: location.r,
                 };
                 break;
-            case MoveTypes.SO:
+            case Directions.SE:
                 wantedLocation = {
                     q: location.q,
                     r: location.r + 1,
                 };
                 break;
-            case MoveTypes.SW:
+            case Directions.SW:
                 wantedLocation = {
                     q: location.q - 1,
                     r: location.r + 1,
                 };
                 break;
-            case MoveTypes.W:
+            case Directions.W:
                 wantedLocation = {
                     q: location.q - 1,
                     r: location.r,
                 };
                 break;
-            case MoveTypes.NW:
+            case Directions.NW:
                 wantedLocation = {
                     q: location.q,
                     r: location.r - 1,
@@ -413,16 +469,16 @@ export class WorldInstance {
 
         if (targetTile.terrainType !== TerrainType.WATER) {
             //can move
-            player.location = wantedLocation;
+            this.player.location = wantedLocation;
             if (!targetTile.isExplored) {
-                let tileEntities : { entityObjects: EntityObject [], entityCreatures: EntityCreature[] } = EntityTileSpawner.entitiesOnTile(targetTile.terrainType);
+                let tileEntities: { entityObjects: EntityObject [], entityCreatures: EntityCreature[] } = EntityTileSpawner.entitiesOnTile(targetTile.terrainType);
                 targetTile.entityObjects = tileEntities.entityObjects;
                 targetTile.entityCreatures = tileEntities.entityCreatures;
                 targetTile.isExplored = true;
             }
         } else {
             //cant move
-            player.location = location;
+            this.player.location = location;
             console.log("Player cant move to water tile");
         }
 

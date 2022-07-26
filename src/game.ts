@@ -3,8 +3,9 @@ import ChatScene from './scenes/chat_scene'
 import MainMenuScene from './scenes/main_menu_scene'
 import SplashScene from './scenes/splash_scene'
 import WorldScene from "./scenes/world_scene";
-import HudScene from "./scenes/hud_scene";
+import HudScene from "./scenes/hud_scene/hud_scene";
 import UIPlugin from 'phaser3-rex-plugins/templates/ui/ui-plugin.js';
+import TileInfoScene from "./scenes/hud_scene/sub_scenes/tile_info_scene";
 
 
 const config = {
@@ -36,8 +37,10 @@ const config = {
         MainMenuScene,
         ChatScene,
         WorldScene,
-        HudScene
+        HudScene,
+        TileInfoScene
     ],
+    fontFamily: 'MondwestPixel'
 }
 
 window.addEventListener('load', () => {

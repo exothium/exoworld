@@ -4,7 +4,7 @@ import Phaser from "phaser";
 import {WorldInstance} from '../classes/worldInstance';
 import {
     AssetSprite,
-    MoveTypes,
+    Directions,
     NoiseHeight,
     NoiseLand,
     QrStruct,
@@ -12,18 +12,13 @@ import {
     TerrainSubType
 } from '../types/worldTypes';
 import MainMenuScene from "./main_menu_scene";
-import HudScene from "./hud_scene";
-import {EntityPlayer} from "../classes/entityPlayer";
-import {LivingStats, LivingType, PlayerStats} from "../types/entityTypes";
+import HudScene from "./hud_scene/hud_scene";
 import {Tile} from "../classes/tile";
-import {EntityTileSpawner} from "../classes/helperClasses/entityTileSpawner";
-import {EntityObject} from "../classes/entityObject";
-import {EntityCreature} from "../classes/entityCreature";
 
 export default class WorldScene extends Phaser.Scene {
     static readonly SCENE_KEY = 'WORLD_SCENE';
 
-    private player_go!: Phaser.GameObjects.Image;
+    private playerAsset!: Phaser.GameObjects.Image;
     private menuGUI;
     private graphics!: Phaser.GameObjects.Graphics;
     private mapTexture;
@@ -67,7 +62,7 @@ export default class WorldScene extends Phaser.Scene {
         },
     };
 
-    private world: WorldInstance;
+    public world: WorldInstance;
 
     private opts = {
         clouds_type_noise_mod: 0,
@@ -76,14 +71,12 @@ export default class WorldScene extends Phaser.Scene {
         timerAux: 0,
     };
 
-    private player: EntityPlayer;
-
     constructor() {
         super(WorldScene.SCENE_KEY);
     }
 
-    private setup() {
-        this.world.reconstruct();
+    private setup(reconstruct) {
+        reconstruct && this.world.reconstruct();
         this.drawTileMap();
         this.drawCloudMap();
     }
@@ -113,10 +106,10 @@ export default class WorldScene extends Phaser.Scene {
 
         this.createHUD();
         this.createCameraInteraction();
-        this.setup();
+        this.setup(false);
         this.createControls();
 
-        this.spawnPlayer();
+        this.renderPlayerOnScene();
     }
 
     update(time, delta) {
@@ -175,66 +168,8 @@ export default class WorldScene extends Phaser.Scene {
         let generationDetails = this.menuGUI.addFolder("Other Generation Details");
         generationDetails.open();
 
-        generationDetails.add(this.opts, "clouds_type_noise_mod", 0, 100).name("cloud noise").onChange(() => this.setup());
-        generationDetails.add(this.opts, "day", 1, 365, 1).name("day").onChange(() => this.setup());
-
-        // export enum MoveTypes {
-        //     NO,
-        //     O,
-        //     SO,
-        //     SW,
-        //     W,
-        //     NW
-        // }
-
-        let move = this.menuGUI.addFolder("Move");
-        move.add({
-            "↗": () => {
-                this.movePlayer(MoveTypes.NO);
-                console.log("Selected movement: ↗ ");
-            }
-        }, '↗');
-        move.add({
-            "→": () => {
-                this.movePlayer(MoveTypes.O);
-                console.log("Selected movement: → ");
-            }
-        }, '→');
-        move.add({
-            "↘": () => {
-                this.movePlayer(MoveTypes.SO);
-                console.log("Selected movement: ↘ ");
-            }
-        }, '↘');
-        move.add({
-            "↙": () => {
-                this.movePlayer(MoveTypes.SW);
-                console.log("Selected movement: ↙ ");
-            }
-        }, '↙');
-        move.add({
-            "←": () => {
-                this.movePlayer(MoveTypes.W);
-                console.log("Selected movement: ← ");
-            }
-        }, '←');
-        move.add({
-            "↖": () => {
-                this.movePlayer(MoveTypes.NW);
-                console.log("Selected movement: ↖ ");
-            }
-        }, '↖');
-        move.open();
-
-    }
-
-    private movePlayer(direction: MoveTypes){
-        const aux_player_location = this.player.location;
-        this.world.movePlayer(this.player, direction);
-        console.log("Move player from " + JSON.stringify(aux_player_location) + " to:" + JSON.stringify(this.player.location));
-
-        this.hudScene.updatePlayerStats(this.player);
-        this.renderPlayerOnScene();
+        generationDetails.add(this.opts, "clouds_type_noise_mod", 0, 100).name("cloud noise").onChange(() => this.setup(true));
+        generationDetails.add(this.opts, "day", 1, 365, 1).name("day").onChange(() => this.setup(true));
     }
 
     private getClouds(n) {
@@ -243,8 +178,10 @@ export default class WorldScene extends Phaser.Scene {
         //let v = 0.9*255;
         //height map
         let assetKey: string = '';
-        if (v < 0.25 * 255) {
-            return true
+        if (v < 0.15 * 255) {
+            return 'cloud1'
+        } else if (v < 0.3 * 255) {
+            return 'cloud2'
         } else {
             return false;
         }
@@ -284,7 +221,7 @@ export default class WorldScene extends Phaser.Scene {
         let tiles = this.world.tiles;
 
         this.cloudTexture && this.cloudTexture.destroy();
-        this.cloudTexture = this.add.blitter(0, 0, 'atlas_clouds').setAlpha(0.4);
+        this.cloudTexture = this.add.blitter(0, 0, 'atlas_clouds').setAlpha(0.6);
 
         for (let key in tiles) {
             this.drawHexCloud(tiles[key]);
@@ -335,50 +272,30 @@ export default class WorldScene extends Phaser.Scene {
         let x = XYTile.x;
         let y = XYTile.y;
         let value2d = this.getCloudsNoise(x, y, 'clouds');
-        let isCloud = this.getClouds(value2d);
-        if (isCloud) {
-            const frameAtari2 = this.textures.getFrame('atlas_clouds', 'clouds');
+        let cloud = this.getClouds(value2d);
+        if (cloud) {
+            const frameAtari2 = this.textures.getFrame('atlas_clouds', cloud);
             this.cloudTexture.create(x - (Math.sqrt(3) * this.world.hexRadius / 2), y - this.world.hexRadius, frameAtari2);
         }
     }
 
     private mapInteractiveScene() {
         this.circleMapArea = this.add.circle(0, 0, this.world.worldRadius).setInteractive();
-        this.circleMapArea.on('pointermove', (pointer, localX, localY) => {
+        this.circleMapArea.on('pointerdown', (pointer, localX, localY) => {
             let selectedHex = this.world.getAxialCoordinatesFromOffSetCoordinates(localX, localY);
             let tile = this.world.tiles[selectedHex.q + '_' + selectedHex.r];
-            this.hudScene.tileInfo.updateTileInfo(tile);
+            this.hudScene.tileInfoScene.updateTileInfo(tile);
         });
     }
 
-    private spawnPlayer() {
-        let livingStats: LivingStats = {hp: 100, stamina: 100};
-        let name: string = "Angelo";
-        let location: QrStruct = {q: 0, r: 0};
-        let isInGame = true;
-        let playerStats: PlayerStats = {hunger: 0};
-        this.player = new EntityPlayer(
-            livingStats,
-            name,
-            location,
-            isInGame,
-            playerStats
-        );
-
-        this.hudScene.updatePlayerStats(this.player);
-
-        //create game object and send it to position
-        let tile : Tile = this.world.getTile(this.player.location);
-        tile.isExplored = true;
-        let tileEntities : { entityObjects: EntityObject [], entityCreatures: EntityCreature[] } = EntityTileSpawner.entitiesOnTile(tile.terrainType);
-        tile.entityObjects = tileEntities.entityObjects;
-        tile.entityCreatures = tileEntities.entityCreatures;
-        this.player_go = this.add.image(tile.positionXY.x, tile.positionXY.y,"punk");
-    }
-
-    private renderPlayerOnScene() {
-        let tile = this.world.getTile(this.player.location);
-        this.player_go.x = tile.positionXY.x;
-        this.player_go.y = tile.positionXY.y;
+    public renderPlayerOnScene() {
+        let player = this.world.player;
+        this.hudScene.updatePlayerStats(player);
+        let tile = this.world.getTile(this.world.player.location);
+        if(!this.playerAsset) {
+            this.playerAsset = this.add.image(tile.positionXY.x, tile.positionXY.y, "punk");
+        }
+        this.playerAsset.x = tile.positionXY.x;
+        this.playerAsset.y = tile.positionXY.y;
     }
 }

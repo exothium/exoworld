@@ -4,11 +4,32 @@
 			"image": "texture",
 			"format": "RGBA8888",
 			"size": {
-				"w": 28,
-				"h": 256
+				"w": 196,
+				"h": 32
 			},
 			"scale": 1,
 			"frames": [
+				{
+					"filename": "dark_water",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 28,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 28,
+						"h": 32
+					},
+					"frame": {
+						"x": 0,
+						"y": 0,
+						"w": 28,
+						"h": 32
+					}
+				},
 				{
 					"filename": "desert",
 					"rotated": false,
@@ -24,7 +45,70 @@
 						"h": 32
 					},
 					"frame": {
+						"x": 28,
+						"y": 0,
+						"w": 28,
+						"h": 32
+					}
+				},
+				{
+					"filename": "forest",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 28,
+						"h": 32
+					},
+					"spriteSourceSize": {
 						"x": 0,
+						"y": 0,
+						"w": 28,
+						"h": 32
+					},
+					"frame": {
+						"x": 56,
+						"y": 0,
+						"w": 28,
+						"h": 32
+					}
+				},
+				{
+					"filename": "light_water",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 28,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 28,
+						"h": 32
+					},
+					"frame": {
+						"x": 84,
+						"y": 0,
+						"w": 28,
+						"h": 32
+					}
+				},
+				{
+					"filename": "mountain",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 28,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 28,
+						"h": 32
+					},
+					"frame": {
+						"x": 112,
 						"y": 0,
 						"w": 28,
 						"h": 32
@@ -45,92 +129,8 @@
 						"h": 32
 					},
 					"frame": {
-						"x": 0,
-						"y": 32,
-						"w": 28,
-						"h": 32
-					}
-				},
-				{
-					"filename": "forest",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 28,
-						"h": 32
-					},
-					"spriteSourceSize": {
-						"x": 0,
+						"x": 140,
 						"y": 0,
-						"w": 28,
-						"h": 32
-					},
-					"frame": {
-						"x": 0,
-						"y": 64,
-						"w": 28,
-						"h": 32
-					}
-				},
-				{
-					"filename": "mountain",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 28,
-						"h": 32
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 28,
-						"h": 32
-					},
-					"frame": {
-						"x": 0,
-						"y": 96,
-						"w": 28,
-						"h": 32
-					}
-				},
-				{
-					"filename": "dark_water",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 28,
-						"h": 32
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 28,
-						"h": 32
-					},
-					"frame": {
-						"x": 0,
-						"y": 128,
-						"w": 28,
-						"h": 32
-					}
-				},
-				{
-					"filename": "light_water",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 28,
-						"h": 32
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 28,
-						"h": 32
-					},
-					"frame": {
-						"x": 0,
-						"y": 160,
 						"w": 28,
 						"h": 32
 					}
@@ -150,29 +150,8 @@
 						"h": 32
 					},
 					"frame": {
-						"x": 0,
-						"y": 192,
-						"w": 28,
-						"h": 32
-					}
-				},
-				{
-					"filename": "land",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 28,
-						"h": 32
-					},
-					"spriteSourceSize": {
-						"x": 0,
+						"x": 168,
 						"y": 0,
-						"w": 28,
-						"h": 32
-					},
-					"frame": {
-						"x": 0,
-						"y": 224,
 						"w": 28,
 						"h": 32
 					}

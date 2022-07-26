@@ -1,7 +1,7 @@
 import ChatScene from "./chat_scene";
 import * as dat from "dat.gui";
 import WorldScene from "./world_scene";
-import HudScene from "./hud_scene";
+import HudScene from "./hud_scene/hud_scene";
 
 export default class MainMenuScene extends Phaser.Scene {
     static readonly SCENE_KEY = 'MENU_SCENE';

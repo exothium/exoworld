@@ -42,13 +42,18 @@ export enum AssetSprite {
     MOUNTAIN = 'mountain'
 }
 
-export enum MoveTypes {
-    NO,
-    O,
-    SO,
+export enum Directions {
+    NE,
+    E,
+    SE,
     SW,
     W,
     NW
+}
+
+export type Neighbors = {
+    direction: Directions,
+    tile: Tile,
 }
 
 export type TileType = {
