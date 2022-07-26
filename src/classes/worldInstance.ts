@@ -163,6 +163,7 @@ export class WorldInstance {
 
     public reconstruct() {
         this.setTileCoordinates();
+        this.spawnPlayer();
     }
 
     public setTileCoordinates() {

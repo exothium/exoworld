@@ -79,6 +79,7 @@ export default class WorldScene extends Phaser.Scene {
         reconstruct && this.world.reconstruct();
         this.drawTileMap();
         this.drawCloudMap();
+        this.renderPlayerOnScene();
     }
 
     preload() {
@@ -108,8 +109,6 @@ export default class WorldScene extends Phaser.Scene {
         this.createCameraInteraction();
         this.setup(false);
         this.createControls();
-
-        this.renderPlayerOnScene();
     }
 
     update(time, delta) {
