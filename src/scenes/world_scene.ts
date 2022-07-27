@@ -14,6 +14,7 @@ import {
 import MainMenuScene from "./main_menu_scene";
 import HudScene from "./hud_scene/hud_scene";
 import {Tile} from "../classes/tile";
+import TileWindowScene from "./hud_scene/sub_scenes/tile_window_scene";
 
 export default class WorldScene extends Phaser.Scene {
     static readonly SCENE_KEY = 'WORLD_SCENE';
@@ -25,6 +26,7 @@ export default class WorldScene extends Phaser.Scene {
     private cloudTexture;
     private circleMapArea;
     private hudScene: HudScene;
+    private tileWindowScene: TileWindowScene;
 
     private noiseHeight: NoiseHeight = {
         [TerrainHeight.DEEPWATER]: {
@@ -123,6 +125,7 @@ export default class WorldScene extends Phaser.Scene {
 
     private createHUD() {
         this.hudScene = <HudScene>this.scene.get(HudScene.SCENE_KEY);
+        this.tileWindowScene = <TileWindowScene>this.scene.get(TileWindowScene.SCENE_KEY);
     }
 
     private createCameraInteraction() {
@@ -158,6 +161,8 @@ export default class WorldScene extends Phaser.Scene {
             mainMenu: () => {
                 this.menuGUI.destroy();
                 this.children.removeAll();
+                this.hudScene.children.removeAll();
+                this.tileWindowScene.children.removeAll();
                 this.scene.start(MainMenuScene.SCENE_KEY);
                 console.log(this.children);
             }

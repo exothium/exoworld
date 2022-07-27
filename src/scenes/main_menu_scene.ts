@@ -16,6 +16,7 @@ export default class MainMenuScene extends Phaser.Scene {
     private _numberOfRings: number = 50;
     private _shapeNoiseMod: number = 10;
     private _tileTypeNoiseMod: number = 5;
+    private _music;
 
     constructor() {
         super(MainMenuScene.SCENE_KEY);
@@ -55,20 +56,21 @@ export default class MainMenuScene extends Phaser.Scene {
             fontStyle: "bold",
             fontFamily: "MondwestPixel"
         }).setOrigin(0.5);
+
         this.sound.pauseOnBlur = false;
-
-        var music = this.sound.add('tunetank');
-
-        music.play();
-        this.textSong.setText('♬ Playing  Ivan Shpilevsky - The Time ‣');
+        if (!this._music) {
+            this._music = this.sound.add('tunetank');
+            this._music.play();
+            this.textSong.setText('♬ Playing  Ivan Shpilevsky - The Time ‣');
+        }
 
         this.textSong.on('pointerdown', (pointer) => {
-            if (music.isPaused) {
+            if (this._music.isPaused) {
                 this.textSong.setText('♬ Playing  Ivan Shpilevsky - The Time •');
-                music.resume()
+                this._music.resume()
             } else {
                 this.textSong.setText('♬ Paused  Ivan Shpilevsky - The Time ‣');
-                music.pause()
+                this._music.pause()
             }
         });
 
