@@ -61,9 +61,9 @@ export default class MainMenuScene extends Phaser.Scene {
         if (!this._music) {
             this._music = this.sound.add('tunetank');
             this._music.play();
-            this.textSong.setText('♬ Playing  Ivan Shpilevsky - The Time ‣');
         }
 
+        this.textSong.setText('♬ Playing  Ivan Shpilevsky - The Time ‣');
         this.textSong.on('pointerdown', (pointer) => {
             if (this._music.isPaused) {
                 this.textSong.setText('♬ Playing  Ivan Shpilevsky - The Time •');
@@ -125,7 +125,6 @@ export default class MainMenuScene extends Phaser.Scene {
             createWorld: () => {
                 console.log(this._worldSeed);
                 this.menuGUI.destroy();
-
                 this.scene.launch(
                     HudScene.SCENE_KEY,
                 );
