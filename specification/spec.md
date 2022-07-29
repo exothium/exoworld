@@ -371,13 +371,101 @@ anyone can attack with a creature, if kills the player the game will collect the
 
 
 
-#### Notes:
-statRequirement:
-Example -> st - 30 > 0
+## Game Contracts
 
-`EntityLiving` can do `interaction` on `entity`?
-`EntityLiving` have the `requirements` to do that?
-yes
-apply `entityEffects` on `EntityLiving`
-apply `targetEffects` on `Entity`
-done
+-  [Crafting & Inventory](./CraftingAndInventory.md)
+-  [Move](./Move.md)
+-  [Sleep](./Sleep.md)
+-  [Eat](./Eat.md)
+-  [Extract](./Extract.md)
+-  [Hunt](./Hunt.md)
+
+#### Serialized Felt Data
+
+````mermaid
+classDiagram
+
+class Recipe{
++20bits tokeId
++7bits quantity
++20bits tokeId
++7bits quantity
++20bits tokeId
++7bits quantity
++20bits tokeId
++7bits quantity
++20bits tokeId
++7bits quantity
++20bits tokeId
++7bits quantity
++20bits tokeId
++7bits quantity
++20bits tokeId
++7bits quantity
++20bits tokeId
++7bits quantity
+}
+
+class CharacterData{
+
++20bits characterId
++20bits exploredTiles
++22bits tileId
++20bits lockingPosition
++20bits cooldown
++10bits cooldownByActionId
++10bits hp
++7bits st
++7bits hn
++1bits locked
+
+
+}
+
+  
+
+class ItemData{
+
+  
+
++20bits tokenId
+
+  
+
++230bits otherStats
+
+  
+
+}
+
+  
+
+class EntityCreatureData{
++20bits entityTypeId
++20bits resourceTokenId
++20bits entityCreatureType
+}
+
+
+class EntityObjectData{
++20bits entityTypeId
++20bits resourceTokenId
++20bits entityObjectType
++10bits x_lastExtraction
++10bits a
++10bits b
++10bits c
+}
+
+  
+
+class TileData{
++7bits biome
+}
+
+````
+
+
+
+
+

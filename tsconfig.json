@@ -1,9 +1,10 @@
 {
   "compilerOptions": {
     "target": "ES2015",
-    "module": "ES2015",
-
-    "strict": true,
+    "module": "commonjs",
+    "experimentalDecorators": true,
+    "isolatedModules": false,
+    "strict": false,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
