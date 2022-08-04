@@ -1,6 +1,6 @@
 import BigNumber from 'bignumber.js'
-import { pTokenId } from './helperClasses/tokenInfo'
 import { Inventory } from './inventory'
+import { pTokenId } from '../../src/classes/helperClasses/tokenInfo'
 
 const tokenBitSize = 20
 const quantityBitSize = 7

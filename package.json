@@ -40,8 +40,10 @@
   },
   "license": "MIT",
   "dependencies": {
+    "-": "0.0.1",
     "@argent/get-starknet": "^3.2.0",
     "@testdeck/mocha": "^0.2.0",
+    "@types/prompts": "^2.0.14",
     "bignumber.js": "^9.0.2",
     "buffer": "^6.0.3",
     "chai": "^4.3.6",
@@ -50,7 +52,9 @@
     "nyc": "^15.1.0",
     "phaser": "^3.55.2",
     "phaser3-rex-plugins": "^1.1.71",
+    "prompts": "^2.4.2",
     "simplex-noise": "^3.0.1",
+    "socket.io": "^4.5.1",
     "socket.io-client": "^4.4.1",
     "starknet": "^3.10.1",
     "ts-mockito": "^2.6.1"
