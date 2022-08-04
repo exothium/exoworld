@@ -1,6 +1,7 @@
 import { Server } from 'socket.io'
 import { WorldContract } from './contracts/WorldContract'
 import { ACTIONS } from '../src/scripts/ActionEnums'
+import { CharacterContract } from './contracts/CharacterContract'
 const io = new Server({
   cors: {
     origin: '*'
@@ -12,7 +13,7 @@ interface dimensionUserId {
 }
 
 interface dimensionInterface {
-  [dimensionNumber: number]: { world: WorldContract }
+  [dimensionNumber: number]: { world: WorldContract; character: CharacterContract }
 }
 
 // ALL DIMENSION ARE HERE
