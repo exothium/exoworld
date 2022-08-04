@@ -13,7 +13,7 @@ interface dimensionUserId {
 }
 
 interface dimensionInterface {
-  [dimensionNumber: number]: { world: WorldContract; character: CharacterContract }
+  [dimensionNumber: number]: { world: WorldContract }
 }
 
 // ALL DIMENSION ARE HERE

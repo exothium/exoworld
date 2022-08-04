@@ -1,21 +1,24 @@
 import {
-  AssetSprite,
-  Directions,
-  Neighbors,
-  QrStruct,
-  TerrainHeight,
-  TerrainSubType,
-  TerrainType,
-  Tiles
-} from '../types/worldTypes'
+    AssetSprite,
+    Directions,
+    Neighbors,
+    NoiseHeight,
+    NoiseLand,
+    QrStruct,
+    TerrainHeight,
+    TerrainSubType,
+    TerrainType,
+    Tiles
+} from '../types/worldTypes';
 import { CanvasSettings, NoiseHeightDefaults, NoiseLandDefaults } from '../types/gameConstants'
-import { Tile } from './tile'
-import SimplexNoise from 'simplex-noise'
-import { EntityTileSpawner } from './helperClasses/entityTileSpawner'
-import { EntityPlayer } from './entityPlayer'
-import { EntityObject } from './entityObject'
-import { EntityCreature } from './entityCreature'
-import { LivingStats, PlayerStats } from '../types/entityTypes'
+import {Tile} from './tile';
+import SimplexNoise from 'simplex-noise';
+import {EntityTileSpawner} from './helperClasses/entityTileSpawner';
+import {EntityPlayer} from "./entityPlayer";
+import {EntityObject} from "./entityObject";
+import {EntityCreature} from "./entityCreature";
+import world_scene from "../phaser/scenes/world_scene";
+import {LivingStats, PlayerStats} from "../types/entityTypes";
 
 export class WorldInstance {
   private readonly _canvasCenterX: number = CanvasSettings.width / 2

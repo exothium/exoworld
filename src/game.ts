@@ -1,11 +1,12 @@
 import 'phaser'
-import ChatScene from './scenes/chat_scene'
-import MainMenuScene from './scenes/main_menu_scene'
-import SplashScene from './scenes/splash_scene'
-import WorldScene from "./scenes/world_scene";
-import HudScene from "./scenes/hud_scene/hud_scene";
+import ChatScene from './phaser/scenes/chat_scene'
+import MainMenuScene from './phaser/scenes/main_menu_scene'
+import SplashScene from './phaser/scenes/splash_scene'
+import WorldScene from "./phaser/scenes/world_scene";
+import HudScene from "./phaser/scenes/hud_scene/hud_scene";
 import UIPlugin from 'phaser3-rex-plugins/templates/ui/ui-plugin.js';
-import TileInfoScene from "./scenes/hud_scene/sub_scenes/tile_window_scene";
+import TileWindowScene from "./phaser/scenes/hud_scene/sub_scenes/tile_window_scene";
+import TileActionWindowScene from "./phaser/scenes/hud_scene/sub_scenes/tile_action_window_scene";
 
 
 const config = {
@@ -38,7 +39,8 @@ const config = {
         ChatScene,
         WorldScene,
         HudScene,
-        TileInfoScene
+        TileWindowScene,
+        TileActionWindowScene
     ],
     fontFamily: 'MondwestPixel'
 }
