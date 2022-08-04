@@ -4,18 +4,18 @@ import { Tile } from '../../src/classes/tile'
 import { CanvasSettings, NoiseHeightDefaults, NoiseLandDefaults } from '../../src/types/gameConstants'
 
 export class WorldContract {
-  private readonly _canvasCenterX: number = CanvasSettings.width / 2
-  private readonly _canvasCenterY: number = CanvasSettings.height / 2
-  private _hexRadius: number
-  private _tiles: { [key: string]: Tile }
+  private readonly _canvasCenterX: number = CanvasSettings.width / 2;
+  private readonly _canvasCenterY: number = CanvasSettings.height / 2;
+  private _hexRadius: number;
+  private _tiles: { [key: string]: Tile };
 
-  private _simplex
-  private _worldSeed: string
-  private _worldRadius: number
-  private _numberOfRings: number
-  private _landSize: number
-  private _shapeNoiseMod: number
-  private _tileTypeNoiseMod: number
+  private _simplex;
+  private _worldSeed: string;
+  private _worldRadius: number;
+  private _numberOfRings: number;
+  private _landSize: number;
+  private _shapeNoiseMod: number;
+  private _tileTypeNoiseMod: number;
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   public constructor() {}
@@ -30,15 +30,15 @@ export class WorldContract {
     tileTypeNoiseMod: number
   ) {
     //todo is valid?
-    this._worldSeed = worldSeed
-    this._hexRadius = hexRadius
-    this._numberOfRings = numberOfRings
-    this._landSize = landSize
-    this._shapeNoiseMod = shapeNoiseMod
-    this._tileTypeNoiseMod = tileTypeNoiseMod
-    this._worldRadius = hexRadius * numberOfRings * Math.sqrt(3) + (hexRadius / 2) * Math.sqrt(3)
+    this._worldSeed = worldSeed;
+    this._hexRadius = hexRadius;
+    this._numberOfRings = numberOfRings;
+    this._landSize = landSize;
+    this._shapeNoiseMod = shapeNoiseMod;
+    this._tileTypeNoiseMod = tileTypeNoiseMod;
+    this._worldRadius = hexRadius * numberOfRings * Math.sqrt(3) + (hexRadius / 2) * Math.sqrt(3);
 
-    this._simplex = new SimplexNoise(this._worldSeed)
+    this._simplex = new SimplexNoise(this._worldSeed);
     this.setTileCoordinates() //spawns tiles and entities
   }
 
